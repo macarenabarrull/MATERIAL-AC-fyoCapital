@@ -781,92 +781,114 @@ export const DownloadSlide: React.FC<SlideProps> = ({ data }) => {
     });
     
     const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
     
-    // --- PORTADA ---
+    // --- PORTADA (Eco-Premium) ---
+    // Minimalist accent line on the left
     doc.setFillColor(79, 70, 229); // Indigo 600
-    doc.rect(0, 0, pageWidth, 297, 'F'); 
+    doc.rect(0, 0, 8, pageHeight, 'F'); 
     
-    // Decorative circles
-    doc.setFillColor(99, 102, 241);
-    doc.circle(pageWidth, 0, 100, 'F');
-    doc.setFillColor(67, 56, 202);
-    doc.circle(0, 297, 80, 'F');
-
-    // Logo
-    doc.setFillColor(15, 23, 42);
-    doc.roundedRect(20, 40, 30, 30, 6, 6, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(18);
+    // Small geometric accent top right
+    doc.setFillColor(241, 245, 249); // Slate 100
+    doc.circle(pageWidth, 0, 40, 'F');
+    
+    // Logo text
+    doc.setTextColor(79, 70, 229);
+    doc.setFontSize(24);
     doc.setFont('helvetica', 'bold');
-    doc.text('fyo', 35, 58, { align: 'center' });
+    doc.text('fyo', 25, 40);
 
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(40);
-    doc.text('GUÍA DEL', 20, 110);
-    doc.text('EVALUADOR', 20, 125);
+    // Titles
+    doc.setTextColor(15, 23, 42); // Slate 900
+    doc.setFontSize(42);
+    doc.text('GUÍA DEL', 25, 120);
+    doc.text('EVALUADOR', 25, 135);
     
+    doc.setTextColor(79, 70, 229);
     doc.setFontSize(14);
     doc.setFont('helvetica', 'normal');
-    doc.text('ASSESSMENT CENTER | DINÁMICA 2', 20, 140);
+    doc.text('ASSESSMENT CENTER | DINÁMICA 2', 25, 150);
 
-    doc.setDrawColor(255, 255, 255);
+    // Evaluator line
+    doc.setDrawColor(203, 213, 225); // Slate 300
     doc.setLineWidth(0.5);
-    doc.line(20, 250, pageWidth - 20, 250);
-    doc.setFontSize(12);
-    doc.text('NOMBRE DEL EVALUADOR: ___________________________', 20, 265);
+    doc.line(25, 250, pageWidth - 25, 250);
+    doc.setTextColor(100, 116, 139); // Slate 500
+    doc.setFontSize(10);
+    doc.text('NOMBRE DEL EVALUADOR', 25, 256);
 
     // --- PÁGINA 2: MINDSET ---
     doc.addPage();
-    // Header helper
+    // Header helper (Clean)
     const addHeader = (title: string) => {
-      doc.setFillColor(79, 70, 229);
-      doc.rect(0, 0, pageWidth, 25, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(12);
+      doc.setDrawColor(79, 70, 229);
+      doc.setLineWidth(1);
+      doc.line(20, 20, pageWidth - 20, 20); // Top line
+      
+      doc.setTextColor(79, 70, 229);
+      doc.setFontSize(10);
       doc.setFont('helvetica', 'bold');
-      doc.text('fyo | Assessment Center', 15, 16);
+      doc.text('fyo | Assessment Center', 20, 28);
+      
+      doc.setTextColor(100, 116, 139);
       doc.setFont('helvetica', 'normal');
-      doc.text(title, pageWidth - 15, 16, { align: 'right' });
+      doc.text(title, pageWidth - 20, 28, { align: 'right' });
+      
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.5);
+      doc.line(20, 32, pageWidth - 20, 32); // Bottom line
     };
 
     addHeader('MINDSET DEL EVALUADOR');
     
     doc.setTextColor(15, 23, 42);
-    doc.setFontSize(22);
+    doc.setFontSize(20);
     doc.setFont('helvetica', 'bold');
-    doc.text('¿QUÉ ESTAMOS EVALUANDO?', 20, 45);
+    doc.text('¿QUÉ ESTAMOS EVALUANDO?', 20, 50);
 
     autoTable(doc, {
-      startY: 55,
+      startY: 60,
       head: [['Mindset del Evaluador', '']],
       body: [
-        ['NO HACER', '• No evaluar "al que más habla"\n• No enamorarse de ideas creativas sin sustento\n• No buscar perfección técnica (son juniors)'],
-        ['SÍ HACER', '• Observar cómo piensan, no qué dicen\n• Detectar trade-offs (cliente vs negocio)\n• Evaluar comportamientos sostenidos']
+        ['×  NO HACER', '• No evaluar "al que más habla"\n• No enamorarse de ideas creativas sin sustento\n• No buscar perfección técnica (son juniors)'],
+        ['✓  SÍ HACER', '• Observar cómo piensan, no qué dicen\n• Detectar trade-offs (cliente vs negocio)\n• Evaluar comportamientos sostenidos']
       ],
-      theme: 'grid',
-      headStyles: { fillColor: [15, 23, 42], textColor: 255, fontStyle: 'bold', fontSize: 12 },
+      theme: 'plain', // Removes default borders
+      headStyles: { fillColor: [248, 250, 252], textColor: [79, 70, 229], fontStyle: 'bold', fontSize: 11 },
       columnStyles: { 
-        0: { fontStyle: 'bold', cellWidth: 40, textColor: [79, 70, 229] },
-        1: { cellWidth: 130 }
+        0: { fontStyle: 'bold', cellWidth: 45, textColor: [15, 23, 42] },
+        1: { cellWidth: 125, textColor: [71, 85, 105] }
       },
-      styles: { font: 'helvetica', fontSize: 11, cellPadding: 8, lineColor: [226, 232, 240] },
-      margin: { left: 20, right: 20 }
+      styles: { font: 'helvetica', fontSize: 10, cellPadding: 8 },
+      margin: { left: 20, right: 20 },
+      didDrawCell: (data) => {
+        // Add custom horizontal lines
+        if (data.row.index === 0 && data.section === 'body') {
+           doc.setDrawColor(226, 232, 240);
+           doc.setLineWidth(0.5);
+           doc.line(data.cell.x, data.cell.y, data.cell.x + data.cell.width, data.cell.y);
+        }
+        doc.setDrawColor(226, 232, 240);
+        doc.setLineWidth(0.5);
+        doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x + data.cell.width, data.cell.y + data.cell.height);
+      }
     });
 
-    let finalY = (doc as any).lastAutoTable.finalY + 15;
+    let finalY = (doc as any).lastAutoTable.finalY + 20;
     
+    // Regla de Oro (Clean box)
     doc.setFillColor(248, 250, 252);
     doc.setDrawColor(79, 70, 229);
-    doc.setLineWidth(1);
-    doc.roundedRect(20, finalY, pageWidth - 40, 30, 4, 4, 'FD');
+    doc.setLineWidth(0.5);
+    doc.rect(20, finalY, pageWidth - 40, 30, 'FD'); // Fill and Draw
     doc.setTextColor(79, 70, 229);
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
-    doc.text('REGLA DE ORO', 25, finalY + 8);
+    doc.text('★ REGLA DE ORO', 28, finalY + 10);
     doc.setTextColor(15, 23, 42);
     doc.setFontSize(12);
     doc.setFont('helvetica', 'italic');
-    doc.text('"Si lo contrato, ¿me acompañaría a una reunión con clientes mañana?"', 25, finalY + 18);
+    doc.text('"Si lo contrato, ¿me acompañaría a una reunión con clientes mañana?"', 28, finalY + 20);
 
     // --- PÁGINA 3: COMPETENCIAS ---
     doc.addPage();
@@ -875,32 +897,37 @@ export const DownloadSlide: React.FC<SlideProps> = ({ data }) => {
     doc.setTextColor(15, 23, 42);
     doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
-    doc.text('Observen quién de los chicos...', 20, 45);
+    doc.text('Observen quién de los chicos...', 20, 50);
 
     autoTable(doc, {
-      startY: 55,
+      startY: 60,
       head: [['Competencia', 'Qué observar para detectarlo']],
       body: [
-        ['Pensamiento de negocio', '• Habla de ingresos, costos o rentabilidad\n• Prioriza (ej: "no podemos hacer todo...")\n• Conecta decisiones con impacto en negocio'],
-        ['Orientación a resultados', '• Empuja a cerrar definiciones\n• Baja ideas a algo accionable\n• Cuida el tiempo'],
-        ['Trabajo en equipo', '• Escucha y retoma ideas de otros\n• Construye sobre lo que ya está\n• Da espacio a otros (no monopoliza)'],
-        ['Influencia', '• Logra que el equipo adopte su idea\n• Argumenta con lógica\n• Lee al grupo y ajusta su approach'],
-        ['Organización y estructuración', '• Ordena la discusión\n• Propone método (roles, pasos, prioridades)\n• Evita que el equipo se pierda en detalles'],
-        ['Toma de decisiones', '• Define un curso de acción claro\n• Plantea opciones y elige una\n• Se hace cargo de la decisión'],
-        ['Manejo de presión', '• No entra en pánico ante el problema\n• Sostiene foco en solución, no en el problema\n• Ayuda a bajar la ansiedad del equipo'],
-        ['Orientación al cliente', '• Propone qué decirle al cliente\n• Tiene en cuenta impacto reputacional\n• Muestra empatía'],
-        ['Negociación', '• No regala todo ni se pone rígido\n• Propone escenarios intermedios\n• Piensa en el impacto a largo plazo'],
-        ['Adaptabilidad', '• Cambia rápido de enfoque cuando el contexto cambia\n• Abandona ideas iniciales sin aferrarse\n• Integra nueva información sin bloquearse']
+        ['► Pensamiento de negocio', '• Habla de ingresos, costos o rentabilidad\n• Prioriza (ej: "no podemos hacer todo...")\n• Conecta decisiones con impacto en negocio'],
+        ['► Orientación a resultados', '• Empuja a cerrar definiciones\n• Baja ideas a algo accionable\n• Cuida el tiempo'],
+        ['► Trabajo en equipo', '• Escucha y retoma ideas de otros\n• Construye sobre lo que ya está\n• Da espacio a otros (no monopoliza)'],
+        ['► Influencia', '• Logra que el equipo adopte su idea\n• Argumenta con lógica\n• Lee al grupo y ajusta su approach'],
+        ['► Organización y estructuración', '• Ordena la discusión\n• Propone método (roles, pasos, prioridades)\n• Evita que el equipo se pierda en detalles'],
+        ['► Toma de decisiones', '• Define un curso de acción claro\n• Plantea opciones y elige una\n• Se hace cargo de la decisión'],
+        ['► Manejo de presión', '• No entra en pánico ante el problema\n• Sostiene foco en solución, no en el problema\n• Ayuda a bajar la ansiedad del equipo'],
+        ['► Orientación al cliente', '• Propone qué decirle al cliente\n• Tiene en cuenta impacto reputacional\n• Muestra empatía'],
+        ['► Negociación', '• No regala todo ni se pone rígido\n• Propone escenarios intermedios\n• Piensa en el impacto a largo plazo'],
+        ['► Adaptabilidad', '• Cambia rápido de enfoque cuando el contexto cambia\n• Abandona ideas iniciales sin aferrarse\n• Integra nueva información sin bloquearse']
       ],
-      theme: 'grid',
-      headStyles: { fillColor: [79, 70, 229], textColor: 255, fontStyle: 'bold', fontSize: 12 },
+      theme: 'plain',
+      headStyles: { fillColor: [248, 250, 252], textColor: [79, 70, 229], fontStyle: 'bold', fontSize: 11 },
       columnStyles: { 
-        0: { fontStyle: 'bold', cellWidth: 50, textColor: [15, 23, 42] },
-        1: { cellWidth: 120 }
+        0: { fontStyle: 'bold', cellWidth: 55, textColor: [15, 23, 42] },
+        1: { cellWidth: 115, textColor: [71, 85, 105] }
       },
-      styles: { font: 'helvetica', fontSize: 10, cellPadding: 6, lineColor: [226, 232, 240] },
+      styles: { font: 'helvetica', fontSize: 10, cellPadding: 7 },
       margin: { left: 20, right: 20 },
-      rowPageBreak: 'avoid'
+      rowPageBreak: 'avoid',
+      didDrawCell: (data) => {
+        doc.setDrawColor(226, 232, 240);
+        doc.setLineWidth(0.5);
+        doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x + data.cell.width, data.cell.y + data.cell.height);
+      }
     });
 
     // --- PÁGINA 4: PREGUNTAS DISPARADORAS ---
@@ -910,14 +937,14 @@ export const DownloadSlide: React.FC<SlideProps> = ({ data }) => {
     doc.setTextColor(15, 23, 42);
     doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
-    doc.text('Preguntas Disparadoras', 20, 45);
+    doc.text('Preguntas Disparadoras', 20, 50);
     doc.setFontSize(11);
     doc.setFont('helvetica', 'italic');
     doc.setTextColor(100, 116, 139);
-    doc.text('(Usarlas si el equipo se estanca o para profundizar)', 20, 52);
+    doc.text('(Usarlas si el equipo se estanca o para profundizar)', 20, 58);
 
     autoTable(doc, {
-      startY: 60,
+      startY: 68,
       head: [['Para Líderes', 'Gestión de Crisis']],
       body: [
         [
@@ -925,10 +952,15 @@ export const DownloadSlide: React.FC<SlideProps> = ({ data }) => {
           '• ¿Qué priorizan: reputación o rentabilidad?\n\n• ¿Qué le dicen HOY al cliente?\n\n• ¿A quién llaman primero internamente?\n\n• ¿Qué decisiones son reversibles y cuáles no?\n\n• ¿Cómo evitan que esto escale a algo mayor?'
         ]
       ],
-      theme: 'grid',
-      headStyles: { fillColor: [16, 185, 129], textColor: 255, fontStyle: 'bold', fontSize: 12 },
-      styles: { font: 'helvetica', fontSize: 11, cellPadding: 8, lineColor: [226, 232, 240], valign: 'top' },
-      margin: { left: 20, right: 20 }
+      theme: 'plain',
+      headStyles: { fillColor: [248, 250, 252], textColor: [79, 70, 229], fontStyle: 'bold', fontSize: 11 },
+      styles: { font: 'helvetica', fontSize: 10, cellPadding: 10, textColor: [71, 85, 105], valign: 'top' },
+      margin: { left: 20, right: 20 },
+      didDrawCell: (data) => {
+        doc.setDrawColor(226, 232, 240);
+        doc.setLineWidth(0.5);
+        doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x + data.cell.width, data.cell.y + data.cell.height);
+      }
     });
 
     doc.save(data.content.fileName || 'Guia_Evaluador_AC.pdf');
