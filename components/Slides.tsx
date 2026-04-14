@@ -4,10 +4,11 @@ import {
   Users, Calendar, GraduationCap, FileText, Flag, Heart, 
   BrainCircuit, Zap, ClipboardCheck, PencilRuler, Search, FileSignature, 
   Rocket, BarChart3, Compass, Target, Layers, Sparkles, DollarSign, Briefcase,
-  Mail, RotateCcw, Clock, Lightbulb, Quote, Download
+  Mail, RotateCcw, Clock, Lightbulb, Quote, Download, XCircle, CheckCircle2
 } from 'lucide-react';
 import { motion } from "framer-motion";
 import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface SlideProps {
   data: SlideData;
@@ -699,200 +700,238 @@ export const WordRaffleSlide: React.FC<SlideProps> = ({ data }) => {
   );
 };
 
-// 11. Download Slide
+// 11. Mindset Slide
+export const MindsetSlide: React.FC<SlideProps> = ({ data }) => {
+  const { evaluamos, donts, dos, reglaOro } = data.content;
+  return (
+    <motion.div className="flex flex-col justify-center h-full py-4 max-w-6xl mx-auto px-6" initial="hidden" animate="show" variants={containerVariants}>
+      <div className="mb-8 text-center">
+        <motion.h2 variants={itemVariants} className="text-3xl md:text-5xl font-black text-slate-900 tracking-tighter font-display uppercase drop-shadow-sm">
+          {data.title}
+        </motion.h2>
+        <motion.p variants={itemVariants} className="text-indigo-600 font-black tracking-[0.3em] uppercase mt-2">
+          {data.subtitle}
+        </motion.p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Left Column */}
+        <motion.div variants={itemVariants}>
+          <GlassCard className="p-8 h-full bg-white/80 border-white shadow-xl rounded-[2rem]">
+            <h3 className="text-slate-900 font-black text-sm uppercase tracking-widest mb-6 flex items-center gap-3">
+              <Target className="text-indigo-600" size={20} />
+              ¿Qué evaluamos realmente?
+            </h3>
+            <ul className="space-y-4">
+              {evaluamos.map((item: string, i: number) => (
+                <li key={i} className="flex items-start gap-3 text-slate-700 font-bold">
+                  <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-2 shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </GlassCard>
+        </motion.div>
+
+        {/* Right Column */}
+        <motion.div variants={itemVariants} className="space-y-6">
+          <GlassCard className="p-8 bg-white/80 border-white shadow-xl rounded-[2rem]">
+            <h3 className="text-slate-900 font-black text-sm uppercase tracking-widest mb-6 flex items-center gap-3">
+              <BrainCircuit className="text-indigo-600" size={20} />
+              Mindset del Evaluador
+            </h3>
+            
+            <div className="space-y-3 mb-6">
+              {donts.map((item: string, i: number) => (
+                <div key={i} className="flex items-center gap-3 p-3 bg-red-50/50 rounded-xl border border-red-100 text-red-700 font-bold text-sm">
+                  <XCircle size={18} className="shrink-0 text-red-500" />
+                  {item}
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-3">
+              {dos.map((item: string, i: number) => (
+                <div key={i} className="flex items-center gap-3 p-3 bg-emerald-50/50 rounded-xl border border-emerald-100 text-emerald-700 font-bold text-sm">
+                  <CheckCircle2 size={18} className="shrink-0 text-emerald-500" />
+                  {item}
+                </div>
+              ))}
+            </div>
+          </GlassCard>
+
+          <GlassCard className="p-6 bg-indigo-600 text-white shadow-xl rounded-[2rem] relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10" />
+            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-200 mb-2">Regla de Oro</h4>
+            <p className="text-lg font-bold italic leading-snug">"{reglaOro}"</p>
+          </GlassCard>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
+
+// 12. Download Slide
 export const DownloadSlide: React.FC<SlideProps> = ({ data }) => {
   const handleDownload = () => {
     const doc = new jsPDF({
-      orientation: 'landscape',
+      orientation: 'portrait',
       unit: 'mm',
       format: 'a4'
     });
+    
+    const pageWidth = doc.internal.pageSize.getWidth();
+    
+    // --- PORTADA ---
+    doc.setFillColor(79, 70, 229); // Indigo 600
+    doc.rect(0, 0, pageWidth, 297, 'F'); 
+    
+    // Decorative circles
+    doc.setFillColor(99, 102, 241);
+    doc.circle(pageWidth, 0, 100, 'F');
+    doc.setFillColor(67, 56, 202);
+    doc.circle(0, 297, 80, 'F');
 
-    // Helper to add header
-    const addHeader = (title: string) => {
-      doc.setFillColor(79, 70, 229); // Indigo 600
-      doc.rect(0, 0, 297, 20, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(16);
-      doc.setFont('helvetica', 'bold');
-      doc.text('fyo | Programa JP 25-26', 10, 14);
-      doc.text(title, 287, 14, { align: 'right' });
-    };
-
-    // Slide 1: Title
-    addHeader('MATERIAL DE EVALUACIÓN');
-    doc.setTextColor(15, 23, 42);
-    doc.setFontSize(36);
-    doc.text('GUÍA PARA ASSESSMENT CENTER', 148.5, 90, { align: 'center' });
+    // Logo
+    doc.setFillColor(15, 23, 42);
+    doc.roundedRect(20, 40, 30, 30, 6, 6, 'F');
+    doc.setTextColor(255, 255, 255);
     doc.setFontSize(18);
-    doc.setTextColor(100, 116, 139);
-    doc.text('Material exclusivo para evaluadores', 148.5, 105, { align: 'center' });
+    doc.setFont('helvetica', 'bold');
+    doc.text('fyo', 35, 58, { align: 'center' });
 
-    // Slide 2: ¿QUÉ EVALUAMOS?
-    doc.addPage();
-    addHeader('MINDSET DEL EVALUADOR');
-    doc.setTextColor(15, 23, 42);
-    doc.setFontSize(24);
-    doc.text('¿QUE ESTAMOS EVALUANDO REALMENTE?', 20, 40);
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(40);
+    doc.text('GUÍA DEL', 20, 110);
+    doc.text('EVALUADOR', 20, 125);
     
     doc.setFontSize(14);
-    doc.text('¿QUE EVALUAMOS?', 20, 60);
     doc.setFont('helvetica', 'normal');
+    doc.text('ASSESSMENT CENTER | DINÁMICA 2', 20, 140);
+
+    doc.setDrawColor(255, 255, 255);
+    doc.setLineWidth(0.5);
+    doc.line(20, 250, pageWidth - 20, 250);
     doc.setFontSize(12);
-    const evaluamos = [
-      '- Pensamiento de negocio (rentabilidad vs cliente)',
-      '- Capacidad de priorizacion bajo presion',
-      '- Toma de decisiones en incertidumbre',
-      '- Influencia y trabajo en equipo',
-      '- Comunicacion ejecutiva',
-      '- Gestion de crisis y resiliencia'
-    ];
-    evaluamos.forEach((text, i) => doc.text(text, 25, 75 + (i * 10)));
+    doc.text('NOMBRE DEL EVALUADOR: ___________________________', 20, 265);
 
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.text('MINDSET DEL EVALUADOR', 150, 60);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(12);
-    doc.setTextColor(220, 38, 38); // Red
-    doc.text('[X] No evaluar "al que mas habla"', 150, 75);
-    doc.text('[X] No enamorarse de ideas creativas sin sustento', 150, 85);
-    doc.text('[X] No buscar perfeccion tecnica (son juniors)', 150, 95);
-    
-    doc.setTextColor(22, 163, 74); // Green
-    doc.text('[V] Observar como piensan, no que dicen', 150, 115);
-    doc.text('[V] Detectar trade-offs (cliente vs negocio)', 150, 125);
-    doc.text('[V] Evaluar comportamientos sostenidos, no momentos aislados', 150, 135);
-
-    doc.setTextColor(15, 23, 42);
-    doc.setFont('helvetica', 'bold');
-    doc.text('REGLA DE ORO:', 150, 160);
-    doc.setFont('helvetica', 'italic');
-    doc.text('"Si lo contrato, ¿me acompanaria a una reunion con clientes manana?"', 150, 170);
-
-    // Slide 3: Competencias 1
+    // --- PÁGINA 2: MINDSET ---
     doc.addPage();
-    addHeader('EVALUACION POR COMPETENCIAS (1/2)');
-    doc.setTextColor(15, 23, 42);
-    doc.setFontSize(20);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Observen quien de los chicos...', 20, 40);
-
-    let y = 60;
-    const addCompetencia = (title: string, points: string[], xOffset = 20) => {
+    // Header helper
+    const addHeader = (title: string) => {
+      doc.setFillColor(79, 70, 229);
+      doc.rect(0, 0, pageWidth, 25, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(14);
-      doc.text(title, xOffset, y);
+      doc.text('fyo | Assessment Center', 15, 16);
       doc.setFont('helvetica', 'normal');
-      doc.setFontSize(11);
-      points.forEach((p, i) => {
-        doc.text(`- ${p}`, xOffset + 5, y + 8 + (i * 6));
-      });
-      y += 35;
+      doc.text(title, pageWidth - 15, 16, { align: 'right' });
     };
 
-    addCompetencia('Pensamiento de negocio', [
-      'Habla de ingresos, costos o rentabilidad (aunque sea basico)',
-      'Prioriza (ej: "no podemos hacer todo, enfoquemonos en...")',
-      'Conecta decisiones (marca, producto, precio) con impacto en negocio'
-    ]);
+    addHeader('MINDSET DEL EVALUADOR');
     
-    addCompetencia('Orientacion a resultados', [
-      'Empuja a cerrar definiciones (evita discusiones infinitas)',
-      'Baja ideas a algo accionable ("ok, entonces hacemos X")',
-      'Cuida el tiempo (advierte que se estan yendo de foco)'
-    ]);
-
-    addCompetencia('Trabajo en equipo', [
-      'Escucha y retoma ideas de otros ("como dijo X, podriamos...")',
-      'Construye sobre lo que ya esta (no reinventa todo)',
-      'Da espacio a otros (no monopoliza)'
-    ]);
-
-    addCompetencia('Influencia', [
-      'Logra que el equipo adopte su idea (no solo la dice)',
-      'Argumenta con logica (no con volumen o insistencia)',
-      'Lee al grupo y ajusta su approach'
-    ]);
-
-    // Slide 4: Competencias 2
-    doc.addPage();
-    addHeader('EVALUACION POR COMPETENCIAS (2/2)');
-    y = 40;
-
-    addCompetencia('Organizacion y estructuracion', [
-      'Ordena la discusion (ej: "dividamos en 3 temas...")',
-      'Propone metodo (roles, pasos, prioridades)',
-      'Evita que el equipo se pierda en detalles irrelevantes'
-    ]);
-
-    addCompetencia('Toma de decisiones', [
-      'Define un curso de accion claro (aunque no sea perfecto)',
-      'Plantea opciones y elige una',
-      'Se hace cargo de la decision (no la patea al grupo)'
-    ]);
-
-    addCompetencia('Manejo de presion', [
-      'No entra en panico ante el problema',
-      'Sostiene foco en solucion, no en el problema',
-      'Ayuda a bajar la ansiedad del equipo'
-    ]);
-
-    addCompetencia('Orientacion al cliente', [
-      'Propone que decirle al cliente (no solo que hacer internamente)',
-      'Tiene en cuenta impacto reputacional',
-      'Muestra empatia (no minimiza el problema)'
-    ]);
-
-    // Slide 5: Competencias 3 & Disparadoras
-    doc.addPage();
-    addHeader('COMPETENCIAS Y PREGUNTAS DISPARADORAS');
-    y = 40;
-
-    addCompetencia('Negociacion (cliente vs negocio)', [
-      'No regala todo ni se pone rigido',
-      'Propone escenarios intermedios',
-      'Piensa en el impacto a largo plazo'
-    ]);
-
-    addCompetencia('Adaptabilidad', [
-      'Cambia rapido de enfoque cuando el contexto cambia',
-      'Abandona ideas iniciales sin aferrarse',
-      'Integra nueva informacion sin bloquearse'
-    ]);
-
-    y = 120;
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(22);
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(16);
-    doc.text('Preguntas disparadoras para lideres', 20, y);
+    doc.text('¿QUÉ ESTAMOS EVALUANDO?', 20, 45);
+
+    autoTable(doc, {
+      startY: 55,
+      head: [['Mindset del Evaluador', '']],
+      body: [
+        ['NO HACER', '• No evaluar "al que más habla"\n• No enamorarse de ideas creativas sin sustento\n• No buscar perfección técnica (son juniors)'],
+        ['SÍ HACER', '• Observar cómo piensan, no qué dicen\n• Detectar trade-offs (cliente vs negocio)\n• Evaluar comportamientos sostenidos']
+      ],
+      theme: 'grid',
+      headStyles: { fillColor: [15, 23, 42], textColor: 255, fontStyle: 'bold', fontSize: 12 },
+      columnStyles: { 
+        0: { fontStyle: 'bold', cellWidth: 40, textColor: [79, 70, 229] },
+        1: { cellWidth: 130 }
+      },
+      styles: { font: 'helvetica', fontSize: 11, cellPadding: 8, lineColor: [226, 232, 240] },
+      margin: { left: 20, right: 20 }
+    });
+
+    let finalY = (doc as any).lastAutoTable.finalY + 15;
+    
+    doc.setFillColor(248, 250, 252);
+    doc.setDrawColor(79, 70, 229);
+    doc.setLineWidth(1);
+    doc.roundedRect(20, finalY, pageWidth - 40, 30, 4, 4, 'FD');
+    doc.setTextColor(79, 70, 229);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('REGLA DE ORO', 25, finalY + 8);
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'italic');
+    doc.text('"Si lo contrato, ¿me acompañaría a una reunión con clientes mañana?"', 25, finalY + 18);
+
+    // --- PÁGINA 3: COMPETENCIAS ---
+    doc.addPage();
+    addHeader('EVALUACIÓN POR COMPETENCIAS');
+    
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Observen quién de los chicos...', 20, 45);
+
+    autoTable(doc, {
+      startY: 55,
+      head: [['Competencia', 'Qué observar para detectarlo']],
+      body: [
+        ['Pensamiento de negocio', '• Habla de ingresos, costos o rentabilidad\n• Prioriza (ej: "no podemos hacer todo...")\n• Conecta decisiones con impacto en negocio'],
+        ['Orientación a resultados', '• Empuja a cerrar definiciones\n• Baja ideas a algo accionable\n• Cuida el tiempo'],
+        ['Trabajo en equipo', '• Escucha y retoma ideas de otros\n• Construye sobre lo que ya está\n• Da espacio a otros (no monopoliza)'],
+        ['Influencia', '• Logra que el equipo adopte su idea\n• Argumenta con lógica\n• Lee al grupo y ajusta su approach'],
+        ['Organización y estructuración', '• Ordena la discusión\n• Propone método (roles, pasos, prioridades)\n• Evita que el equipo se pierda en detalles'],
+        ['Toma de decisiones', '• Define un curso de acción claro\n• Plantea opciones y elige una\n• Se hace cargo de la decisión'],
+        ['Manejo de presión', '• No entra en pánico ante el problema\n• Sostiene foco en solución, no en el problema\n• Ayuda a bajar la ansiedad del equipo'],
+        ['Orientación al cliente', '• Propone qué decirle al cliente\n• Tiene en cuenta impacto reputacional\n• Muestra empatía'],
+        ['Negociación', '• No regala todo ni se pone rígido\n• Propone escenarios intermedios\n• Piensa en el impacto a largo plazo'],
+        ['Adaptabilidad', '• Cambia rápido de enfoque cuando el contexto cambia\n• Abandona ideas iniciales sin aferrarse\n• Integra nueva información sin bloquearse']
+      ],
+      theme: 'grid',
+      headStyles: { fillColor: [79, 70, 229], textColor: 255, fontStyle: 'bold', fontSize: 12 },
+      columnStyles: { 
+        0: { fontStyle: 'bold', cellWidth: 50, textColor: [15, 23, 42] },
+        1: { cellWidth: 120 }
+      },
+      styles: { font: 'helvetica', fontSize: 10, cellPadding: 6, lineColor: [226, 232, 240] },
+      margin: { left: 20, right: 20 },
+      rowPageBreak: 'avoid'
+    });
+
+    // --- PÁGINA 4: PREGUNTAS DISPARADORAS ---
+    doc.addPage();
+    addHeader('GUÍA DE INTERVENCIÓN');
+    
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Preguntas Disparadoras', 20, 45);
     doc.setFontSize(11);
     doc.setFont('helvetica', 'italic');
-    doc.text('(usarlas si el equipo se estanca o para profundizar)', 20, y + 6);
-    doc.setFont('helvetica', 'normal');
-    const pregLideres = [
-      '- ¿Cual es el modelo de ingresos de esta agencia?',
-      '- Si tuvieran que elegir: ¿experiencia premium o ahorro?',
-      '- ¿Que los hace diferentes de la competencia?',
-      '- ¿Donde pierden plata en este modelo?',
-      '- ¿Que decision tomarian si solo tuvieran 1 semana para lanzar?'
-    ];
-    pregLideres.forEach((p, i) => doc.text(p, 25, y + 14 + (i * 6)));
+    doc.setTextColor(100, 116, 139);
+    doc.text('(Usarlas si el equipo se estanca o para profundizar)', 20, 52);
 
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(16);
-    doc.text('Preguntas disparadoras (gestion de crisis)', 150, y);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(11);
-    const pregCrisis = [
-      '- ¿Que priorizan: reputacion o rentabilidad?',
-      '- ¿Que le dicen HOY al cliente?',
-      '- ¿A quien llaman primero internamente?',
-      '- ¿Que decisiones son reversibles y cuales no?',
-      '- ¿Como evitan que esto escale a algo mayor?'
-    ];
-    pregCrisis.forEach((p, i) => doc.text(p, 155, y + 14 + (i * 6)));
+    autoTable(doc, {
+      startY: 60,
+      head: [['Para Líderes', 'Gestión de Crisis']],
+      body: [
+        [
+          '• ¿Cuál es el modelo de ingresos de esta agencia?\n\n• Si tuvieran que elegir: ¿experiencia premium o ahorro?\n\n• ¿Qué los hace diferentes de la competencia?\n\n• ¿Dónde pierden plata en este modelo?\n\n• ¿Qué decisión tomarían si solo tuvieran 1 semana para lanzar?',
+          '• ¿Qué priorizan: reputación o rentabilidad?\n\n• ¿Qué le dicen HOY al cliente?\n\n• ¿A quién llaman primero internamente?\n\n• ¿Qué decisiones son reversibles y cuáles no?\n\n• ¿Cómo evitan que esto escale a algo mayor?'
+        ]
+      ],
+      theme: 'grid',
+      headStyles: { fillColor: [16, 185, 129], textColor: 255, fontStyle: 'bold', fontSize: 12 },
+      styles: { font: 'helvetica', fontSize: 11, cellPadding: 8, lineColor: [226, 232, 240], valign: 'top' },
+      margin: { left: 20, right: 20 }
+    });
 
-    doc.save(data.content.fileName || 'Guia_Evaluador_Assessment.pdf');
+    doc.save(data.content.fileName || 'Guia_Evaluador_AC.pdf');
   };
 
   return (

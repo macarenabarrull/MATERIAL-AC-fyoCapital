@@ -12,7 +12,8 @@ import {
   ClosingSlide,
   EcosystemCirclesSlide,
   WordRaffleSlide,
-  DownloadSlide
+  DownloadSlide,
+  MindsetSlide
 } from './components/Slides';
 
 const App: React.FC = () => {
@@ -68,6 +69,8 @@ const App: React.FC = () => {
           return <EcosystemCirclesSlide data={data} />;
         case 'raffle':
           return <WordRaffleSlide data={data} />;
+        case 'mindset':
+          return <MindsetSlide data={data} />;
         case 'download':
           return <DownloadSlide data={data} />;
         case 'closing':

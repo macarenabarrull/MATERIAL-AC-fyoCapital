@@ -2,7 +2,7 @@ export type IconKey = 'Compass' | 'Target' | 'BrainCircuit' | 'Layers' | 'Zap' |
 
 export interface SlideData {
   id: string;
-  type: 'cover' | 'image' | 'objectives' | 'info' | 'timeline' | 'grid' | 'table-granos' | 'table-capital' | 'mentoring-split' | 'academy-split' | 'closing' | 'tutor-content' | 'ecosystem-circles' | 'raffle' | 'download';
+  type: 'cover' | 'image' | 'objectives' | 'info' | 'timeline' | 'grid' | 'table-granos' | 'table-capital' | 'mentoring-split' | 'academy-split' | 'closing' | 'tutor-content' | 'ecosystem-circles' | 'raffle' | 'download' | 'mindset';
   title?: string;
   subtitle?: string;
   content?: any;
@@ -13,12 +13,12 @@ export const SLIDES: SlideData[] = [
   {
     id: 'cover',
     type: 'cover',
-    title: 'PROGRAMA JP 25-26 🚀',
-    subtitle: 'assessment center',
+    title: 'GUÍA DEL EVALUADOR 🎯',
+    subtitle: 'Assessment Center | Dinámica 2',
     theme: 'brand',
     content: {
       highlight: 'fyo',
-      tags: ['Somos un equipo', 'Creamos oportunidades', 'Pensamos en grande']
+      tags: ['Mindset', 'Competencias', 'Evaluación']
     }
   },
   {
@@ -154,6 +154,34 @@ export const SLIDES: SlideData[] = [
       objective: 'Evaluar visión estratégica, trabajo colaborativo y toma de decisiones bajo presión.',
       consigna: 'En equipos, analicen el escenario de mercado planteado y construyan una solución innovadora utilizando los recursos disponibles.',
       competencies: ['Visión de Negocio', 'Trabajo Colaborativo', 'Liderazgo', 'Adaptabilidad']
+    }
+  },
+  {
+    id: 'mindset',
+    type: 'mindset',
+    title: '¿QUÉ ESTAMOS EVALUANDO REALMENTE?',
+    subtitle: 'MINDSET DEL EVALUADOR',
+    theme: 'light',
+    content: {
+      evaluamos: [
+        'Pensamiento de negocio (rentabilidad vs cliente)',
+        'Capacidad de priorización bajo presión',
+        'Toma de decisiones en incertidumbre',
+        'Influencia y trabajo en equipo',
+        'Comunicación ejecutiva',
+        'Gestión de crisis y resiliencia'
+      ],
+      donts: [
+        'No evaluar "al que más habla"',
+        'No enamorarse de ideas creativas sin sustento',
+        'No buscar perfección técnica (son juniors)'
+      ],
+      dos: [
+        'Observar cómo piensan, no qué dicen',
+        'Detectar trade-offs (cliente vs negocio)',
+        'Evaluar comportamientos sostenidos, no momentos aislados'
+      ],
+      reglaOro: 'Si lo contrato, ¿me acompañaría a una reunión con clientes mañana?'
     }
   },
   {
