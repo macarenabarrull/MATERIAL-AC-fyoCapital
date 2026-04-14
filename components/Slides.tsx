@@ -4,11 +4,13 @@ import {
   Users, Calendar, GraduationCap, FileText, Flag, Heart, 
   BrainCircuit, Zap, ClipboardCheck, PencilRuler, Search, FileSignature, 
   Rocket, BarChart3, Compass, Target, Layers, Sparkles, DollarSign, Briefcase,
-  Mail, RotateCcw, Clock, Lightbulb, Quote, Download, XCircle, CheckCircle2
+  Mail, RotateCcw, Clock, Lightbulb, Quote, Download, XCircle, CheckCircle2, Loader2
 } from 'lucide-react';
 import { motion } from "framer-motion";
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import html2canvas from 'html2canvas';
+import { useState, useRef } from 'react';
 
 interface SlideProps {
   data: SlideData;
@@ -773,197 +775,42 @@ export const MindsetSlide: React.FC<SlideProps> = ({ data }) => {
 
 // 12. Download Slide
 export const DownloadSlide: React.FC<SlideProps> = ({ data }) => {
-  const handleDownload = () => {
-    const doc = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4'
-    });
-    
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    
-    // --- PORTADA (Eco-Premium) ---
-    // Minimalist accent line on the left
-    doc.setFillColor(79, 70, 229); // Indigo 600
-    doc.rect(0, 0, 8, pageHeight, 'F'); 
-    
-    // Small geometric accent top right
-    doc.setFillColor(241, 245, 249); // Slate 100
-    doc.circle(pageWidth, 0, 40, 'F');
-    
-    // Logo text
-    doc.setTextColor(79, 70, 229);
-    doc.setFontSize(24);
-    doc.setFont('helvetica', 'bold');
-    doc.text('fyo', 25, 40);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const pdfRef = useRef<HTMLDivElement>(null);
 
-    // Titles
-    doc.setTextColor(15, 23, 42); // Slate 900
-    doc.setFontSize(42);
-    doc.text('GUÍA DEL', 25, 120);
-    doc.text('EVALUADOR', 25, 135);
+  const handleDownload = async () => {
+    if (!pdfRef.current) return;
+    setIsGenerating(true);
     
-    doc.setTextColor(79, 70, 229);
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'normal');
-    doc.text('ASSESSMENT CENTER | DINÁMICA 2', 25, 150);
-
-    // Evaluator line
-    doc.setDrawColor(203, 213, 225); // Slate 300
-    doc.setLineWidth(0.5);
-    doc.line(25, 250, pageWidth - 25, 250);
-    doc.setTextColor(100, 116, 139); // Slate 500
-    doc.setFontSize(10);
-    doc.text('NOMBRE DEL EVALUADOR', 25, 256);
-
-    // --- PÁGINA 2: MINDSET ---
-    doc.addPage();
-    // Header helper (Clean)
-    const addHeader = (title: string) => {
-      doc.setDrawColor(79, 70, 229);
-      doc.setLineWidth(1);
-      doc.line(20, 20, pageWidth - 20, 20); // Top line
+    try {
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
       
-      doc.setTextColor(79, 70, 229);
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'bold');
-      doc.text('fyo | Assessment Center', 20, 28);
+      const pages = pdfRef.current.querySelectorAll('.pdf-page');
       
-      doc.setTextColor(100, 116, 139);
-      doc.setFont('helvetica', 'normal');
-      doc.text(title, pageWidth - 20, 28, { align: 'right' });
+      for (let i = 0; i < pages.length; i++) {
+        const canvas = await html2canvas(pages[i] as HTMLElement, { 
+          scale: 2, // High resolution
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff'
+        });
+        
+        const imgData = canvas.toDataURL('image/jpeg', 1.0);
+        
+        if (i > 0) doc.addPage();
+        doc.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+      }
       
-      doc.setDrawColor(226, 232, 240);
-      doc.setLineWidth(0.5);
-      doc.line(20, 32, pageWidth - 20, 32); // Bottom line
-    };
-
-    addHeader('MINDSET DEL EVALUADOR');
-    
-    doc.setTextColor(15, 23, 42);
-    doc.setFontSize(20);
-    doc.setFont('helvetica', 'bold');
-    doc.text('¿QUÉ ESTAMOS EVALUANDO?', 20, 50);
-
-    autoTable(doc, {
-      startY: 60,
-      head: [['Mindset del Evaluador', '']],
-      body: [
-        ['×  NO HACER', '• No evaluar "al que más habla"\n• No enamorarse de ideas creativas sin sustento\n• No buscar perfección técnica (son juniors)'],
-        ['✓  SÍ HACER', '• Observar cómo piensan, no qué dicen\n• Detectar trade-offs (cliente vs negocio)\n• Evaluar comportamientos sostenidos']
-      ],
-      theme: 'plain', // Removes default borders
-      headStyles: { fillColor: [248, 250, 252], textColor: [79, 70, 229], fontStyle: 'bold', fontSize: 11 },
-      columnStyles: { 
-        0: { fontStyle: 'bold', cellWidth: 45, textColor: [15, 23, 42] },
-        1: { cellWidth: 125, textColor: [71, 85, 105] }
-      },
-      styles: { font: 'helvetica', fontSize: 10, cellPadding: 8 },
-      margin: { left: 20, right: 20 },
-      didDrawCell: (data) => {
-        // Add custom horizontal lines
-        if (data.row.index === 0 && data.section === 'body') {
-           doc.setDrawColor(226, 232, 240);
-           doc.setLineWidth(0.5);
-           doc.line(data.cell.x, data.cell.y, data.cell.x + data.cell.width, data.cell.y);
-        }
-        doc.setDrawColor(226, 232, 240);
-        doc.setLineWidth(0.5);
-        doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x + data.cell.width, data.cell.y + data.cell.height);
-      }
-    });
-
-    let finalY = (doc as any).lastAutoTable.finalY + 20;
-    
-    // Regla de Oro (Clean box)
-    doc.setFillColor(248, 250, 252);
-    doc.setDrawColor(79, 70, 229);
-    doc.setLineWidth(0.5);
-    doc.rect(20, finalY, pageWidth - 40, 30, 'FD'); // Fill and Draw
-    doc.setTextColor(79, 70, 229);
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    doc.text('★ REGLA DE ORO', 28, finalY + 10);
-    doc.setTextColor(15, 23, 42);
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'italic');
-    doc.text('"Si lo contrato, ¿me acompañaría a una reunión con clientes mañana?"', 28, finalY + 20);
-
-    // --- PÁGINA 3: COMPETENCIAS ---
-    doc.addPage();
-    addHeader('EVALUACIÓN POR COMPETENCIAS');
-    
-    doc.setTextColor(15, 23, 42);
-    doc.setFontSize(18);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Observen quién de los chicos...', 20, 50);
-
-    autoTable(doc, {
-      startY: 60,
-      head: [['Competencia', 'Qué observar para detectarlo']],
-      body: [
-        ['► Pensamiento de negocio', '• Habla de ingresos, costos o rentabilidad\n• Prioriza (ej: "no podemos hacer todo...")\n• Conecta decisiones con impacto en negocio'],
-        ['► Orientación a resultados', '• Empuja a cerrar definiciones\n• Baja ideas a algo accionable\n• Cuida el tiempo'],
-        ['► Trabajo en equipo', '• Escucha y retoma ideas de otros\n• Construye sobre lo que ya está\n• Da espacio a otros (no monopoliza)'],
-        ['► Influencia', '• Logra que el equipo adopte su idea\n• Argumenta con lógica\n• Lee al grupo y ajusta su approach'],
-        ['► Organización y estructuración', '• Ordena la discusión\n• Propone método (roles, pasos, prioridades)\n• Evita que el equipo se pierda en detalles'],
-        ['► Toma de decisiones', '• Define un curso de acción claro\n• Plantea opciones y elige una\n• Se hace cargo de la decisión'],
-        ['► Manejo de presión', '• No entra en pánico ante el problema\n• Sostiene foco en solución, no en el problema\n• Ayuda a bajar la ansiedad del equipo'],
-        ['► Orientación al cliente', '• Propone qué decirle al cliente\n• Tiene en cuenta impacto reputacional\n• Muestra empatía'],
-        ['► Negociación', '• No regala todo ni se pone rígido\n• Propone escenarios intermedios\n• Piensa en el impacto a largo plazo'],
-        ['► Adaptabilidad', '• Cambia rápido de enfoque cuando el contexto cambia\n• Abandona ideas iniciales sin aferrarse\n• Integra nueva información sin bloquearse']
-      ],
-      theme: 'plain',
-      headStyles: { fillColor: [248, 250, 252], textColor: [79, 70, 229], fontStyle: 'bold', fontSize: 11 },
-      columnStyles: { 
-        0: { fontStyle: 'bold', cellWidth: 55, textColor: [15, 23, 42] },
-        1: { cellWidth: 115, textColor: [71, 85, 105] }
-      },
-      styles: { font: 'helvetica', fontSize: 10, cellPadding: 7 },
-      margin: { left: 20, right: 20 },
-      rowPageBreak: 'avoid',
-      didDrawCell: (data) => {
-        doc.setDrawColor(226, 232, 240);
-        doc.setLineWidth(0.5);
-        doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x + data.cell.width, data.cell.y + data.cell.height);
-      }
-    });
-
-    // --- PÁGINA 4: PREGUNTAS DISPARADORAS ---
-    doc.addPage();
-    addHeader('GUÍA DE INTERVENCIÓN');
-    
-    doc.setTextColor(15, 23, 42);
-    doc.setFontSize(18);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Preguntas Disparadoras', 20, 50);
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'italic');
-    doc.setTextColor(100, 116, 139);
-    doc.text('(Usarlas si el equipo se estanca o para profundizar)', 20, 58);
-
-    autoTable(doc, {
-      startY: 68,
-      head: [['Para Líderes', 'Gestión de Crisis']],
-      body: [
-        [
-          '• ¿Cuál es el modelo de ingresos de esta agencia?\n\n• Si tuvieran que elegir: ¿experiencia premium o ahorro?\n\n• ¿Qué los hace diferentes de la competencia?\n\n• ¿Dónde pierden plata en este modelo?\n\n• ¿Qué decisión tomarían si solo tuvieran 1 semana para lanzar?',
-          '• ¿Qué priorizan: reputación o rentabilidad?\n\n• ¿Qué le dicen HOY al cliente?\n\n• ¿A quién llaman primero internamente?\n\n• ¿Qué decisiones son reversibles y cuáles no?\n\n• ¿Cómo evitan que esto escale a algo mayor?'
-        ]
-      ],
-      theme: 'plain',
-      headStyles: { fillColor: [248, 250, 252], textColor: [79, 70, 229], fontStyle: 'bold', fontSize: 11 },
-      styles: { font: 'helvetica', fontSize: 10, cellPadding: 10, textColor: [71, 85, 105], valign: 'top' },
-      margin: { left: 20, right: 20 },
-      didDrawCell: (data) => {
-        doc.setDrawColor(226, 232, 240);
-        doc.setLineWidth(0.5);
-        doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x + data.cell.width, data.cell.y + data.cell.height);
-      }
-    });
-
-    doc.save(data.content.fileName || 'Guia_Evaluador_AC.pdf');
+      doc.save(data.content.fileName || 'Guia_Evaluador_AC.pdf');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -991,13 +838,237 @@ export const DownloadSlide: React.FC<SlideProps> = ({ data }) => {
             whileHover={{ scale: 1.05, translateY: -2 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleDownload}
-            className="flex items-center gap-4 px-10 py-4 bg-indigo-600 text-white rounded-full font-black text-sm transition-all shadow-[0_10px_30px_rgba(79,70,229,0.3)] hover:bg-indigo-700 hover:shadow-[0_15px_40px_rgba(79,70,229,0.4)] font-display tracking-[0.2em] uppercase group"
+            disabled={isGenerating}
+            className={`flex items-center gap-4 px-10 py-4 bg-indigo-600 text-white rounded-full font-black text-sm transition-all shadow-[0_10px_30px_rgba(79,70,229,0.3)] hover:bg-indigo-700 hover:shadow-[0_15px_40px_rgba(79,70,229,0.4)] font-display tracking-[0.2em] uppercase group ${isGenerating ? 'opacity-75 cursor-not-allowed' : ''}`}
           >
-            <Download size={20} className="group-hover:-translate-y-1 transition-transform duration-300" />
-            {data.content.buttonText}
+            {isGenerating ? (
+              <Loader2 size={20} className="animate-spin" />
+            ) : (
+              <Download size={20} className="group-hover:-translate-y-1 transition-transform duration-300" />
+            )}
+            {isGenerating ? 'GENERANDO PDF...' : data.content.buttonText}
           </motion.button>
         </GlassCard>
       </motion.div>
+
+      {/* HIDDEN PDF TEMPLATE */}
+      <div className="overflow-hidden h-0 w-0 absolute opacity-0 pointer-events-none">
+        <div ref={pdfRef} className="flex flex-col bg-slate-100">
+          
+          {/* PAGE 1: PORTADA */}
+          <div className="pdf-page w-[210mm] h-[297mm] bg-white relative flex flex-col box-border">
+            <div className="absolute left-0 top-0 bottom-0 w-3 bg-indigo-600" />
+            <div className="absolute right-0 top-0 w-40 h-40 bg-slate-50 rounded-bl-full" />
+            
+            <div className="pl-16 pt-16">
+              <h1 className="text-3xl font-bold text-indigo-600 tracking-tight">fyo</h1>
+            </div>
+            
+            <div className="pl-16 mt-40">
+              <h2 className="text-[3.5rem] leading-none font-black text-slate-900 tracking-tighter">GUÍA DEL<br/>EVALUADOR</h2>
+              <p className="text-xl font-bold text-indigo-600 tracking-widest mt-6 uppercase">Assessment Center | Dinámica 2</p>
+            </div>
+            
+            <div className="absolute bottom-16 left-16 right-16 border-t border-slate-200 pt-6">
+              <p className="text-sm font-bold text-slate-400 tracking-widest uppercase">Nombre del Evaluador</p>
+            </div>
+          </div>
+
+          {/* PAGE 2: MINDSET */}
+          <div className="pdf-page w-[210mm] h-[297mm] bg-white relative flex flex-col box-border px-16 py-16">
+            <div className="border-y border-indigo-600 py-3 flex justify-between items-center mb-12">
+              <span className="text-sm font-bold text-indigo-600">fyo | Assessment Center</span>
+              <span className="text-sm text-slate-500 font-bold">MINDSET DEL EVALUADOR</span>
+            </div>
+            
+            <h3 className="text-2xl font-black text-slate-900 mb-8 flex items-center gap-3">
+              <span className="text-3xl">🧠</span> ¿QUÉ ESTAMOS EVALUANDO?
+            </h3>
+            
+            <div className="flex flex-col gap-6 mb-12">
+              <div className="border-b border-slate-100 pb-6">
+                <h4 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                  <span className="text-xl">🛑</span> LO QUE NO DEBEMOS HACER
+                </h4>
+                <ul className="space-y-3 pl-8">
+                  <li className="text-slate-600 text-base font-medium">• No evaluar "al que más habla"</li>
+                  <li className="text-slate-600 text-base font-medium">• No enamorarse de ideas creativas sin sustento</li>
+                  <li className="text-slate-600 text-base font-medium">• No buscar perfección técnica (son juniors)</li>
+                </ul>
+              </div>
+              
+              <div className="border-b border-slate-100 pb-6">
+                <h4 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                  <span className="text-xl">✅</span> LO QUE SÍ DEBEMOS HACER
+                </h4>
+                <ul className="space-y-3 pl-8">
+                  <li className="text-slate-600 text-base font-medium">• Observar cómo piensan, no qué dicen</li>
+                  <li className="text-slate-600 text-base font-medium">• Detectar trade-offs (cliente vs negocio)</li>
+                  <li className="text-slate-600 text-base font-medium">• Evaluar comportamientos sostenidos</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div className="bg-slate-50 border border-indigo-100 rounded-2xl p-8 mt-auto">
+              <h4 className="text-sm font-black text-indigo-600 tracking-widest uppercase mb-3 flex items-center gap-2">
+                <span className="text-lg">💎</span> REGLA DE ORO
+              </h4>
+              <p className="text-xl font-medium text-slate-800 italic">
+                "Si lo contrato, ¿me acompañaría a una reunión con clientes mañana?"
+              </p>
+            </div>
+          </div>
+
+          {/* PAGE 3: COMPETENCIAS 1 */}
+          <div className="pdf-page w-[210mm] h-[297mm] bg-white relative flex flex-col box-border px-16 py-16">
+            <div className="border-y border-indigo-600 py-3 flex justify-between items-center mb-10">
+              <span className="text-sm font-bold text-indigo-600">fyo | Assessment Center</span>
+              <span className="text-sm text-slate-500 font-bold">EVALUACIÓN POR COMPETENCIAS (1/2)</span>
+            </div>
+            
+            <h3 className="text-2xl font-black text-slate-900 mb-8">
+              Observen quién de los chicos...
+            </h3>
+            
+            <div className="space-y-8">
+              <div className="border-b border-slate-100 pb-6">
+                <h4 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+                  <span className="text-xl">💼</span> Pensamiento de negocio
+                </h4>
+                <ul className="space-y-2 pl-8">
+                  <li className="text-slate-600 text-base font-medium">• Habla de ingresos, costos o rentabilidad</li>
+                  <li className="text-slate-600 text-base font-medium">• Prioriza (ej: "no podemos hacer todo...")</li>
+                  <li className="text-slate-600 text-base font-medium">• Conecta decisiones con impacto en negocio</li>
+                </ul>
+              </div>
+              <div className="border-b border-slate-100 pb-6">
+                <h4 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+                  <span className="text-xl">🎯</span> Orientación a resultados
+                </h4>
+                <ul className="space-y-2 pl-8">
+                  <li className="text-slate-600 text-base font-medium">• Empuja a cerrar definiciones</li>
+                  <li className="text-slate-600 text-base font-medium">• Baja ideas a algo accionable</li>
+                  <li className="text-slate-600 text-base font-medium">• Cuida el tiempo</li>
+                </ul>
+              </div>
+              <div className="border-b border-slate-100 pb-6">
+                <h4 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+                  <span className="text-xl">🤝</span> Trabajo en equipo
+                </h4>
+                <ul className="space-y-2 pl-8">
+                  <li className="text-slate-600 text-base font-medium">• Escucha y retoma ideas de otros</li>
+                  <li className="text-slate-600 text-base font-medium">• Construye sobre lo que ya está</li>
+                  <li className="text-slate-600 text-base font-medium">• Da espacio a otros (no monopoliza)</li>
+                </ul>
+              </div>
+              <div className="border-b border-slate-100 pb-6">
+                <h4 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+                  <span className="text-xl">🗣️</span> Influencia
+                </h4>
+                <ul className="space-y-2 pl-8">
+                  <li className="text-slate-600 text-base font-medium">• Logra que el equipo adopte su idea</li>
+                  <li className="text-slate-600 text-base font-medium">• Argumenta con lógica</li>
+                  <li className="text-slate-600 text-base font-medium">• Lee al grupo y ajusta su approach</li>
+                </ul>
+              </div>
+              <div className="border-b border-slate-100 pb-6">
+                <h4 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+                  <span className="text-xl">🧩</span> Organización y estructuración
+                </h4>
+                <ul className="space-y-2 pl-8">
+                  <li className="text-slate-600 text-base font-medium">• Ordena la discusión</li>
+                  <li className="text-slate-600 text-base font-medium">• Propone método (roles, pasos, prioridades)</li>
+                  <li className="text-slate-600 text-base font-medium">• Evita que el equipo se pierda en detalles</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* PAGE 4: COMPETENCIAS 2 & DISPARADORAS */}
+          <div className="pdf-page w-[210mm] h-[297mm] bg-white relative flex flex-col box-border px-16 py-16">
+            <div className="border-y border-indigo-600 py-3 flex justify-between items-center mb-10">
+              <span className="text-sm font-bold text-indigo-600">fyo | Assessment Center</span>
+              <span className="text-sm text-slate-500 font-bold">EVALUACIÓN POR COMPETENCIAS (2/2)</span>
+            </div>
+            
+            <div className="space-y-8 mb-12">
+              <div className="border-b border-slate-100 pb-6">
+                <h4 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+                  <span className="text-xl">⚖️</span> Toma de decisiones
+                </h4>
+                <ul className="space-y-2 pl-8">
+                  <li className="text-slate-600 text-base font-medium">• Define un curso de acción claro</li>
+                  <li className="text-slate-600 text-base font-medium">• Plantea opciones y elige una</li>
+                  <li className="text-slate-600 text-base font-medium">• Se hace cargo de la decisión</li>
+                </ul>
+              </div>
+              <div className="border-b border-slate-100 pb-6">
+                <h4 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+                  <span className="text-xl">🛡️</span> Manejo de presión
+                </h4>
+                <ul className="space-y-2 pl-8">
+                  <li className="text-slate-600 text-base font-medium">• No entra en pánico ante el problema</li>
+                  <li className="text-slate-600 text-base font-medium">• Sostiene foco en solución</li>
+                  <li className="text-slate-600 text-base font-medium">• Ayuda a bajar la ansiedad del equipo</li>
+                </ul>
+              </div>
+              <div className="border-b border-slate-100 pb-6">
+                <h4 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+                  <span className="text-xl">👥</span> Orientación al cliente
+                </h4>
+                <ul className="space-y-2 pl-8">
+                  <li className="text-slate-600 text-base font-medium">• Propone qué decirle al cliente</li>
+                  <li className="text-slate-600 text-base font-medium">• Tiene en cuenta impacto reputacional</li>
+                  <li className="text-slate-600 text-base font-medium">• Muestra empatía</li>
+                </ul>
+              </div>
+              <div className="border-b border-slate-100 pb-6">
+                <h4 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+                  <span className="text-xl">🔄</span> Adaptabilidad
+                </h4>
+                <ul className="space-y-2 pl-8">
+                  <li className="text-slate-600 text-base font-medium">• Cambia rápido de enfoque</li>
+                  <li className="text-slate-600 text-base font-medium">• Abandona ideas iniciales sin aferrarse</li>
+                  <li className="text-slate-600 text-base font-medium">• Integra nueva información sin bloquearse</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-auto">
+              <h3 className="text-xl font-black text-slate-900 mb-2">
+                Preguntas Disparadoras
+              </h3>
+              <p className="text-sm text-slate-500 italic mb-6">(Usarlas si el equipo se estanca o para profundizar)</p>
+              
+              <div className="grid grid-cols-2 gap-8">
+                <div className="bg-slate-50 rounded-xl p-6 border border-slate-100">
+                  <h4 className="text-base font-bold text-indigo-600 mb-4 flex items-center gap-2">
+                    <span className="text-lg">🎤</span> Para Líderes
+                  </h4>
+                  <ul className="space-y-3">
+                    <li className="text-slate-700 text-sm font-medium">• ¿Cuál es el modelo de ingresos?</li>
+                    <li className="text-slate-700 text-sm font-medium">• ¿Experiencia premium o ahorro?</li>
+                    <li className="text-slate-700 text-sm font-medium">• ¿Qué los hace diferentes?</li>
+                    <li className="text-slate-700 text-sm font-medium">• ¿Dónde pierden plata?</li>
+                  </ul>
+                </div>
+                <div className="bg-slate-50 rounded-xl p-6 border border-slate-100">
+                  <h4 className="text-base font-bold text-rose-600 mb-4 flex items-center gap-2">
+                    <span className="text-lg">🚨</span> Gestión de Crisis
+                  </h4>
+                  <ul className="space-y-3">
+                    <li className="text-slate-700 text-sm font-medium">• ¿Reputación o rentabilidad?</li>
+                    <li className="text-slate-700 text-sm font-medium">• ¿Qué le dicen HOY al cliente?</li>
+                    <li className="text-slate-700 text-sm font-medium">• ¿A quién llaman primero?</li>
+                    <li className="text-slate-700 text-sm font-medium">• ¿Qué decisiones son reversibles?</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </motion.div>
   );
 };
