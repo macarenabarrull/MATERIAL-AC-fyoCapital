@@ -7,6 +7,7 @@ import {
   Mail, RotateCcw, Clock, Lightbulb, Quote, Download
 } from 'lucide-react';
 import { motion } from "framer-motion";
+import { jsPDF } from 'jspdf';
 
 interface SlideProps {
   data: SlideData;
@@ -701,16 +702,197 @@ export const WordRaffleSlide: React.FC<SlideProps> = ({ data }) => {
 // 11. Download Slide
 export const DownloadSlide: React.FC<SlideProps> = ({ data }) => {
   const handleDownload = () => {
-    // Generamos un PDF en blanco temporalmente hasta tener el contenido real
-    const blob = new Blob(['Contenido del PDF (Próximamente)'], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = data.content.fileName || 'documento.pdf';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const doc = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    // Helper to add header
+    const addHeader = (title: string) => {
+      doc.setFillColor(79, 70, 229); // Indigo 600
+      doc.rect(0, 0, 297, 20, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text('fyo | Programa JP 25-26', 10, 14);
+      doc.text(title, 287, 14, { align: 'right' });
+    };
+
+    // Slide 1: Title
+    addHeader('MATERIAL DE EVALUACIÓN');
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(36);
+    doc.text('GUÍA PARA ASSESSMENT CENTER', 148.5, 90, { align: 'center' });
+    doc.setFontSize(18);
+    doc.setTextColor(100, 116, 139);
+    doc.text('Material exclusivo para evaluadores', 148.5, 105, { align: 'center' });
+
+    // Slide 2: ¿QUÉ EVALUAMOS?
+    doc.addPage();
+    addHeader('MINDSET DEL EVALUADOR');
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(24);
+    doc.text('¿QUE ESTAMOS EVALUANDO REALMENTE?', 20, 40);
+    
+    doc.setFontSize(14);
+    doc.text('¿QUE EVALUAMOS?', 20, 60);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(12);
+    const evaluamos = [
+      '- Pensamiento de negocio (rentabilidad vs cliente)',
+      '- Capacidad de priorizacion bajo presion',
+      '- Toma de decisiones en incertidumbre',
+      '- Influencia y trabajo en equipo',
+      '- Comunicacion ejecutiva',
+      '- Gestion de crisis y resiliencia'
+    ];
+    evaluamos.forEach((text, i) => doc.text(text, 25, 75 + (i * 10)));
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.text('MINDSET DEL EVALUADOR', 150, 60);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(12);
+    doc.setTextColor(220, 38, 38); // Red
+    doc.text('[X] No evaluar "al que mas habla"', 150, 75);
+    doc.text('[X] No enamorarse de ideas creativas sin sustento', 150, 85);
+    doc.text('[X] No buscar perfeccion tecnica (son juniors)', 150, 95);
+    
+    doc.setTextColor(22, 163, 74); // Green
+    doc.text('[V] Observar como piensan, no que dicen', 150, 115);
+    doc.text('[V] Detectar trade-offs (cliente vs negocio)', 150, 125);
+    doc.text('[V] Evaluar comportamientos sostenidos, no momentos aislados', 150, 135);
+
+    doc.setTextColor(15, 23, 42);
+    doc.setFont('helvetica', 'bold');
+    doc.text('REGLA DE ORO:', 150, 160);
+    doc.setFont('helvetica', 'italic');
+    doc.text('"Si lo contrato, ¿me acompanaria a una reunion con clientes manana?"', 150, 170);
+
+    // Slide 3: Competencias 1
+    doc.addPage();
+    addHeader('EVALUACION POR COMPETENCIAS (1/2)');
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Observen quien de los chicos...', 20, 40);
+
+    let y = 60;
+    const addCompetencia = (title: string, points: string[], xOffset = 20) => {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.text(title, xOffset, y);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(11);
+      points.forEach((p, i) => {
+        doc.text(`- ${p}`, xOffset + 5, y + 8 + (i * 6));
+      });
+      y += 35;
+    };
+
+    addCompetencia('Pensamiento de negocio', [
+      'Habla de ingresos, costos o rentabilidad (aunque sea basico)',
+      'Prioriza (ej: "no podemos hacer todo, enfoquemonos en...")',
+      'Conecta decisiones (marca, producto, precio) con impacto en negocio'
+    ]);
+    
+    addCompetencia('Orientacion a resultados', [
+      'Empuja a cerrar definiciones (evita discusiones infinitas)',
+      'Baja ideas a algo accionable ("ok, entonces hacemos X")',
+      'Cuida el tiempo (advierte que se estan yendo de foco)'
+    ]);
+
+    addCompetencia('Trabajo en equipo', [
+      'Escucha y retoma ideas de otros ("como dijo X, podriamos...")',
+      'Construye sobre lo que ya esta (no reinventa todo)',
+      'Da espacio a otros (no monopoliza)'
+    ]);
+
+    addCompetencia('Influencia', [
+      'Logra que el equipo adopte su idea (no solo la dice)',
+      'Argumenta con logica (no con volumen o insistencia)',
+      'Lee al grupo y ajusta su approach'
+    ]);
+
+    // Slide 4: Competencias 2
+    doc.addPage();
+    addHeader('EVALUACION POR COMPETENCIAS (2/2)');
+    y = 40;
+
+    addCompetencia('Organizacion y estructuracion', [
+      'Ordena la discusion (ej: "dividamos en 3 temas...")',
+      'Propone metodo (roles, pasos, prioridades)',
+      'Evita que el equipo se pierda en detalles irrelevantes'
+    ]);
+
+    addCompetencia('Toma de decisiones', [
+      'Define un curso de accion claro (aunque no sea perfecto)',
+      'Plantea opciones y elige una',
+      'Se hace cargo de la decision (no la patea al grupo)'
+    ]);
+
+    addCompetencia('Manejo de presion', [
+      'No entra en panico ante el problema',
+      'Sostiene foco en solucion, no en el problema',
+      'Ayuda a bajar la ansiedad del equipo'
+    ]);
+
+    addCompetencia('Orientacion al cliente', [
+      'Propone que decirle al cliente (no solo que hacer internamente)',
+      'Tiene en cuenta impacto reputacional',
+      'Muestra empatia (no minimiza el problema)'
+    ]);
+
+    // Slide 5: Competencias 3 & Disparadoras
+    doc.addPage();
+    addHeader('COMPETENCIAS Y PREGUNTAS DISPARADORAS');
+    y = 40;
+
+    addCompetencia('Negociacion (cliente vs negocio)', [
+      'No regala todo ni se pone rigido',
+      'Propone escenarios intermedios',
+      'Piensa en el impacto a largo plazo'
+    ]);
+
+    addCompetencia('Adaptabilidad', [
+      'Cambia rapido de enfoque cuando el contexto cambia',
+      'Abandona ideas iniciales sin aferrarse',
+      'Integra nueva informacion sin bloquearse'
+    ]);
+
+    y = 120;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.text('Preguntas disparadoras para lideres', 20, y);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'italic');
+    doc.text('(usarlas si el equipo se estanca o para profundizar)', 20, y + 6);
+    doc.setFont('helvetica', 'normal');
+    const pregLideres = [
+      '- ¿Cual es el modelo de ingresos de esta agencia?',
+      '- Si tuvieran que elegir: ¿experiencia premium o ahorro?',
+      '- ¿Que los hace diferentes de la competencia?',
+      '- ¿Donde pierden plata en este modelo?',
+      '- ¿Que decision tomarian si solo tuvieran 1 semana para lanzar?'
+    ];
+    pregLideres.forEach((p, i) => doc.text(p, 25, y + 14 + (i * 6)));
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.text('Preguntas disparadoras (gestion de crisis)', 150, y);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
+    const pregCrisis = [
+      '- ¿Que priorizan: reputacion o rentabilidad?',
+      '- ¿Que le dicen HOY al cliente?',
+      '- ¿A quien llaman primero internamente?',
+      '- ¿Que decisiones son reversibles y cuales no?',
+      '- ¿Como evitan que esto escale a algo mayor?'
+    ];
+    pregCrisis.forEach((p, i) => doc.text(p, 155, y + 14 + (i * 6)));
+
+    doc.save(data.content.fileName || 'Guia_Evaluador_Assessment.pdf');
   };
 
   return (
