@@ -4,7 +4,8 @@ import {
   Users, Calendar, GraduationCap, FileText, Flag, Heart, 
   BrainCircuit, Zap, ClipboardCheck, PencilRuler, Search, FileSignature, 
   Rocket, BarChart3, Compass, Target, Layers, Sparkles, DollarSign, Briefcase,
-  Mail, RotateCcw, Clock, Lightbulb, Quote, Download, XCircle, CheckCircle2, Loader2
+  Mail, RotateCcw, Clock, Lightbulb, Quote, Download, XCircle, CheckCircle2, Loader2, AlertCircle,
+  Headphones, ShieldAlert, Wallet, Diamond, Megaphone, UserX
 } from 'lucide-react';
 import { motion } from "framer-motion";
 import { jsPDF } from 'jspdf';
@@ -855,213 +856,459 @@ export const DownloadSlide: React.FC<SlideProps> = ({ data }) => {
       <div className="overflow-hidden h-0 w-0 absolute opacity-0 pointer-events-none">
         <div ref={pdfRef} className="flex flex-col bg-slate-100">
           
-          {/* PAGE 1: PORTADA */}
-          <div className="pdf-page w-[210mm] h-[297mm] bg-white relative flex flex-col box-border px-12 py-12 text-left">
-            <div className="border-b-2 border-indigo-600 pb-6 mb-12">
-              <h1 className="text-2xl font-black text-indigo-600 tracking-tight">fyo</h1>
-              <p className="text-xs font-bold text-slate-400 tracking-widest uppercase mt-1">Documento de Trabajo Interno</p>
+          {/* PAGE 1: MINDSET Y COMPETENCIAS BASE */}
+          <div className="pdf-page w-[210mm] h-[297mm] bg-white relative flex flex-col box-border px-[12mm] py-[12mm] text-left font-sans">
+            
+            {/* Header */}
+            <div className="flex justify-between items-start mb-4">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-slate-900 rounded-xl flex items-center justify-center text-white font-black text-2xl tracking-tighter">
+                  fyo
+                </div>
+                <div className="flex flex-col">
+                  <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-none">GUÍA DEL EVALUADOR</h1>
+                  <h2 className="text-xs font-bold text-indigo-600 tracking-widest uppercase mt-1">Assessment Center | Dinámica 2</h2>
+                </div>
+              </div>
+              <div className="flex flex-col items-end gap-1.5">
+                <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">Página 1 de 2</span>
+                <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded text-[9px] font-black tracking-widest uppercase">Confidencial</span>
+              </div>
             </div>
             
-            <div className="mt-12">
-              <h2 className="text-4xl font-black text-slate-900 tracking-tight mb-4">GUÍA DEL EVALUADOR</h2>
-              <p className="text-lg font-bold text-indigo-600 tracking-widest uppercase">Assessment Center | Dinámica 2</p>
-            </div>
-            
-            <div className="mt-auto border-t border-slate-200 pt-6">
-              <p className="text-xs font-bold text-slate-400 tracking-widest uppercase">Nombre del Evaluador: __________________________________________________</p>
-              <p className="text-xs font-bold text-slate-400 tracking-widest uppercase mt-4">Fecha: _______ / _______ / ___________</p>
-            </div>
-          </div>
+            <div className="border-b-2 border-slate-900 w-full mb-6"></div>
 
-          {/* PAGE 2: MINDSET */}
-          <div className="pdf-page w-[210mm] h-[297mm] bg-white relative flex flex-col box-border px-12 py-12 text-left">
-            <div className="border-b border-indigo-600 pb-2 mb-8 flex justify-between items-end">
-              <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">fyo | Assessment Center</span>
-              <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">Mindset del Evaluador</span>
+            {/* Name Line */}
+            <div className="flex items-end gap-2 mb-6 w-full">
+              <span className="text-xs font-bold text-slate-400 tracking-widest uppercase whitespace-nowrap">Nombre del Evaluador:</span>
+              <div className="flex-1 border-b border-slate-300"></div>
             </div>
-            
-            <h3 className="text-lg font-black text-slate-900 mb-6 flex items-center gap-2">
-              <span className="text-xl">🧠</span> ¿QUÉ ESTAMOS EVALUANDO?
-            </h3>
-            
-            <div className="flex flex-col gap-6 mb-8">
-              <div className="border-l-2 border-rose-500 pl-4 py-1 bg-slate-50/50">
-                <h4 className="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
-                  <span className="text-base">🛑</span> LO QUE NO DEBEMOS HACER
-                </h4>
-                <ul className="space-y-1.5 pl-6">
-                  <li className="text-slate-700 text-sm">• No evaluar "al que más habla"</li>
-                  <li className="text-slate-700 text-sm">• No enamorarse de ideas creativas sin sustento</li>
-                  <li className="text-slate-700 text-sm">• No buscar perfección técnica (son juniors)</li>
-                </ul>
+
+            {/* Section Title: Mindset */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-indigo-600 text-white p-1.5 rounded-md">
+                <BrainCircuit size={20} strokeWidth={2.5} />
               </div>
-              
-              <div className="border-l-2 border-emerald-500 pl-4 py-1 bg-slate-50/50">
-                <h4 className="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
-                  <span className="text-base">✅</span> LO QUE SÍ DEBEMOS HACER
-                </h4>
-                <ul className="space-y-1.5 pl-6">
-                  <li className="text-slate-700 text-sm">• Observar cómo piensan, no qué dicen</li>
-                  <li className="text-slate-700 text-sm">• Detectar trade-offs (cliente vs negocio)</li>
-                  <li className="text-slate-700 text-sm">• Evaluar comportamientos sostenidos</li>
-                </ul>
-              </div>
+              <h3 className="text-xl font-black text-slate-900 tracking-tight uppercase">Mindset del Evaluador</h3>
             </div>
-            
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 mt-auto">
-              <h4 className="text-xs font-black text-indigo-600 tracking-widest uppercase mb-2 flex items-center gap-2">
-                <span className="text-base">💎</span> REGLA DE ORO
-              </h4>
-              <p className="text-base font-medium text-slate-800 italic">
+
+            {/* Regla de Oro */}
+            <div className="border border-slate-200 bg-slate-50/50 rounded-xl p-4 mb-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles size={16} className="text-indigo-600" />
+                <h4 className="text-xs font-bold text-indigo-600 tracking-widest uppercase">Regla de Oro</h4>
+              </div>
+              <p className="text-sm font-bold text-slate-700 italic leading-relaxed">
                 "Si lo contrato, ¿me acompañaría a una reunión con clientes mañana?"
               </p>
             </div>
+
+            {/* Do's and Don'ts */}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="border border-rose-200 bg-rose-50/30 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <XCircle size={14} className="text-rose-600" />
+                  <h5 className="text-xs font-black text-slate-900 uppercase">Lo que NO debemos hacer</h5>
+                </div>
+                <ul className="text-[10px] text-slate-600 leading-relaxed font-medium space-y-1.5 pl-4 list-disc marker:text-rose-400">
+                  <li>Evaluar "al que más habla"</li>
+                  <li>Enamorarse de ideas creativas sin sustento</li>
+                  <li>Buscar perfección técnica (son perfiles junior)</li>
+                </ul>
+              </div>
+              <div className="border border-emerald-200 bg-emerald-50/30 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <CheckCircle2 size={14} className="text-emerald-600" />
+                  <h5 className="text-xs font-black text-slate-900 uppercase">Lo que SÍ debemos hacer</h5>
+                </div>
+                <ul className="text-[10px] text-slate-600 leading-relaxed font-medium space-y-1.5 pl-4 list-disc marker:text-emerald-400">
+                  <li>Observar cómo piensan, no qué dicen</li>
+                  <li>Detectar trade-offs (cliente vs negocio)</li>
+                  <li>Evaluar comportamientos sostenidos</li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Section Title: Competencias */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-indigo-600 text-white p-1.5 rounded-md">
+                <Layers size={20} strokeWidth={2.5} />
+              </div>
+              <h3 className="text-xl font-black text-slate-900 tracking-tight uppercase">Competencias Base</h3>
+            </div>
+
+            {/* Competencies Grid 1 */}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="border border-slate-200 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-indigo-600"></div>
+                  <h5 className="text-xs font-black text-slate-900 uppercase">Pensamiento de Negocio</h5>
+                </div>
+                <p className="text-[10px] text-slate-600 leading-relaxed font-medium">Habla de ingresos, costos o rentabilidad. Prioriza (ej: "no podemos hacer todo..."). Conecta decisiones con impacto en negocio.</p>
+              </div>
+              <div className="border border-slate-200 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-indigo-600"></div>
+                  <h5 className="text-xs font-black text-slate-900 uppercase">Orientación a Resultados</h5>
+                </div>
+                <p className="text-[10px] text-slate-600 leading-relaxed font-medium">Empuja a cerrar definiciones. Baja ideas a algo accionable. Cuida el tiempo y evita discusiones infinitas.</p>
+              </div>
+              <div className="border border-slate-200 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-indigo-600"></div>
+                  <h5 className="text-xs font-black text-slate-900 uppercase">Trabajo en Equipo</h5>
+                </div>
+                <p className="text-[10px] text-slate-600 leading-relaxed font-medium">Escucha y retoma ideas de otros. Construye sobre lo que ya está. Da espacio a otros (no monopoliza la conversación).</p>
+              </div>
+              <div className="border border-slate-200 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-indigo-600"></div>
+                  <h5 className="text-xs font-black text-slate-900 uppercase">Influencia</h5>
+                </div>
+                <p className="text-[10px] text-slate-600 leading-relaxed font-medium">Logra que el equipo adopte su idea. Argumenta con lógica (no con volumen). Lee al grupo y ajusta su approach.</p>
+              </div>
+            </div>
+
+            {/* Notes Section */}
+            <div className="mt-auto">
+              <div className="border-b border-dashed border-slate-300 mb-4"></div>
+              <div className="flex items-center gap-2 mb-3">
+                <ClipboardCheck size={16} className="text-slate-400" />
+                <h4 className="text-xs font-bold text-slate-400 tracking-widest uppercase">Observaciones de los candidatos</h4>
+              </div>
+              <div className="flex flex-col gap-0">
+                <div className="border-b border-slate-100 h-7 w-full"></div>
+                <div className="border-b border-slate-100 h-7 w-full"></div>
+                <div className="border-b border-slate-100 h-7 w-full"></div>
+                <div className="border-b border-slate-100 h-7 w-full"></div>
+                <div className="border-b border-slate-100 h-7 w-full"></div>
+              </div>
+            </div>
           </div>
 
-          {/* PAGE 3: COMPETENCIAS 1 */}
-          <div className="pdf-page w-[210mm] h-[297mm] bg-white relative flex flex-col box-border px-12 py-12 text-left">
-            <div className="border-b border-indigo-600 pb-2 mb-8 flex justify-between items-end">
-              <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">fyo | Assessment Center</span>
-              <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">Evaluación por Competencias (1/2)</span>
+          {/* PAGE 2: CRISIS Y PREGUNTAS */}
+          <div className="pdf-page w-[210mm] h-[297mm] bg-white relative flex flex-col box-border px-[12mm] py-[12mm] text-left font-sans">
+            
+            {/* Header */}
+            <div className="flex justify-between items-start mb-4">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-slate-900 rounded-xl flex items-center justify-center text-white font-black text-2xl tracking-tighter">
+                  fyo
+                </div>
+                <div className="flex flex-col">
+                  <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-none">GUÍA DEL EVALUADOR</h1>
+                  <h2 className="text-xs font-bold text-rose-600 tracking-widest uppercase mt-1">Assessment Center | Dinámica 2</h2>
+                </div>
+              </div>
+              <div className="flex flex-col items-end gap-1.5">
+                <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">Página 2 de 2</span>
+                <span className="bg-rose-100 text-rose-600 px-3 py-1 rounded text-[9px] font-black tracking-widest uppercase">Urgente</span>
+              </div>
             </div>
             
-            <h3 className="text-lg font-black text-slate-900 mb-6">
-              Observen quién de los chicos...
-            </h3>
-            
-            <div className="grid grid-cols-1 gap-5">
-              <div className="border-b border-slate-100 pb-4">
-                <h4 className="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
-                  <span className="text-base">💼</span> Pensamiento de negocio
-                </h4>
-                <ul className="space-y-1 pl-6">
-                  <li className="text-slate-700 text-sm">• Habla de ingresos, costos o rentabilidad</li>
-                  <li className="text-slate-700 text-sm">• Prioriza (ej: "no podemos hacer todo...")</li>
-                  <li className="text-slate-700 text-sm">• Conecta decisiones con impacto en negocio</li>
-                </ul>
+            <div className="border-b-2 border-slate-900 w-full mb-8"></div>
+
+            {/* Section Title */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="bg-rose-600 text-white p-1.5 rounded-md">
+                <AlertCircle size={20} strokeWidth={2.5} />
               </div>
-              <div className="border-b border-slate-100 pb-4">
-                <h4 className="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
-                  <span className="text-base">🎯</span> Orientación a resultados
-                </h4>
-                <ul className="space-y-1 pl-6">
-                  <li className="text-slate-700 text-sm">• Empuja a cerrar definiciones</li>
-                  <li className="text-slate-700 text-sm">• Baja ideas a algo accionable</li>
-                  <li className="text-slate-700 text-sm">• Cuida el tiempo</li>
-                </ul>
+              <h3 className="text-xl font-black text-rose-600 tracking-tight uppercase">Competencias de Gestión</h3>
+            </div>
+
+            {/* Competencies Grid 2 */}
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              <div className="border border-slate-200 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-rose-600"></div>
+                  <h5 className="text-xs font-black text-slate-900 uppercase">Organización y Estructuración</h5>
+                </div>
+                <p className="text-[10px] text-slate-600 leading-relaxed font-medium">Ordena la discusión. Propone método (roles, pasos, prioridades). Evita que el equipo se pierda en detalles.</p>
               </div>
-              <div className="border-b border-slate-100 pb-4">
-                <h4 className="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
-                  <span className="text-base">🤝</span> Trabajo en equipo
-                </h4>
-                <ul className="space-y-1 pl-6">
-                  <li className="text-slate-700 text-sm">• Escucha y retoma ideas de otros</li>
-                  <li className="text-slate-700 text-sm">• Construye sobre lo que ya está</li>
-                  <li className="text-slate-700 text-sm">• Da espacio a otros (no monopoliza)</li>
-                </ul>
+              <div className="border border-slate-200 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-rose-600"></div>
+                  <h5 className="text-xs font-black text-slate-900 uppercase">Toma de Decisiones</h5>
+                </div>
+                <p className="text-[10px] text-slate-600 leading-relaxed font-medium">Define un curso de acción claro. Plantea opciones y elige una. Se hace cargo de la decisión tomada.</p>
               </div>
-              <div className="border-b border-slate-100 pb-4">
-                <h4 className="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
-                  <span className="text-base">🗣️</span> Influencia
-                </h4>
-                <ul className="space-y-1 pl-6">
-                  <li className="text-slate-700 text-sm">• Logra que el equipo adopte su idea</li>
-                  <li className="text-slate-700 text-sm">• Argumenta con lógica</li>
-                  <li className="text-slate-700 text-sm">• Lee al grupo y ajusta su approach</li>
-                </ul>
+              <div className="border border-slate-200 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-rose-600"></div>
+                  <h5 className="text-xs font-black text-slate-900 uppercase">Manejo de Presión</h5>
+                </div>
+                <p className="text-[10px] text-slate-600 leading-relaxed font-medium">No entra en pánico ante el problema. Sostiene foco en solución. Ayuda a bajar la ansiedad del equipo.</p>
               </div>
-              <div className="border-b border-slate-100 pb-4">
-                <h4 className="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
-                  <span className="text-base">🧩</span> Organización y estructuración
-                </h4>
-                <ul className="space-y-1 pl-6">
-                  <li className="text-slate-700 text-sm">• Ordena la discusión</li>
-                  <li className="text-slate-700 text-sm">• Propone método (roles, pasos, prioridades)</li>
-                  <li className="text-slate-700 text-sm">• Evita que el equipo se pierda en detalles</li>
-                </ul>
+              <div className="border border-slate-200 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-rose-600"></div>
+                  <h5 className="text-xs font-black text-slate-900 uppercase">Orientación al Cliente</h5>
+                </div>
+                <p className="text-[10px] text-slate-600 leading-relaxed font-medium">Propone qué decirle al cliente. Tiene en cuenta impacto reputacional. Muestra empatía ante el problema.</p>
+              </div>
+              <div className="border border-slate-200 rounded-xl p-4 col-span-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-rose-600"></div>
+                  <h5 className="text-xs font-black text-slate-900 uppercase">Adaptabilidad</h5>
+                </div>
+                <p className="text-[10px] text-slate-600 leading-relaxed font-medium">Cambia rápido de enfoque. Abandona ideas iniciales sin aferrarse. Integra nueva información sin bloquearse.</p>
+              </div>
+            </div>
+
+            {/* Section Title: Preguntas */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="bg-rose-600 text-white p-1.5 rounded-md">
+                <Zap size={20} strokeWidth={2.5} />
+              </div>
+              <h3 className="text-xl font-black text-rose-600 tracking-tight uppercase">Preguntas Disparadoras</h3>
+            </div>
+
+            {/* Scenarios (Preguntas) */}
+            <div className="flex flex-col gap-4 mb-8">
+              <div className="border border-slate-200 rounded-xl p-4 flex gap-6 items-center">
+                <div className="flex flex-col items-center justify-center gap-2 min-w-[50px]">
+                  <span className="text-sm font-black text-rose-600">1</span>
+                  <div className="bg-rose-50 text-rose-600 p-2 rounded-lg">
+                    <Users size={16} />
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h5 className="text-xs font-black text-slate-900 uppercase mb-1">Para Líderes</h5>
+                  <p className="text-[10px] font-medium text-slate-600 italic leading-relaxed">
+                    ¿Cuál es el modelo de ingresos? • ¿Experiencia premium o ahorro? • ¿Qué los hace diferentes? • ¿Dónde pierden plata? • ¿Cómo justifican su estructura de costos? • ¿Están pensando a corto o largo plazo?
+                  </p>
+                </div>
+              </div>
+
+              <div className="border border-slate-200 rounded-xl p-4 flex gap-6 items-center">
+                <div className="flex flex-col items-center justify-center gap-2 min-w-[50px]">
+                  <span className="text-sm font-black text-rose-600">2</span>
+                  <div className="bg-rose-50 text-rose-600 p-2 rounded-lg">
+                    <AlertCircle size={16} />
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h5 className="text-xs font-black text-slate-900 uppercase mb-1">Gestión de Crisis</h5>
+                  <p className="text-[10px] font-medium text-slate-600 italic leading-relaxed">
+                    ¿Reputación o rentabilidad? • ¿Qué le dicen HOY al cliente? • ¿A quién llaman primero? • ¿Qué decisiones son reversibles? • ¿Cómo mitigan el daño a la marca? • ¿Asumen la culpa o la delegan?
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Notes Section */}
+            <div className="mt-auto">
+              <div className="border-b border-dashed border-slate-300 mb-4"></div>
+              <div className="flex items-center gap-2 mb-3">
+                <ClipboardCheck size={16} className="text-slate-400" />
+                <h4 className="text-xs font-bold text-slate-400 tracking-widest uppercase">Plan de acción y resoluciones</h4>
+              </div>
+              <div className="flex flex-col gap-0">
+                <div className="border-b border-slate-100 h-7 w-full"></div>
+                <div className="border-b border-slate-100 h-7 w-full"></div>
+                <div className="border-b border-slate-100 h-7 w-full"></div>
+                <div className="border-b border-slate-100 h-7 w-full"></div>
+                <div className="border-b border-slate-100 h-7 w-full"></div>
               </div>
             </div>
           </div>
 
-          {/* PAGE 4: COMPETENCIAS 2 & DISPARADORAS */}
-          <div className="pdf-page w-[210mm] h-[297mm] bg-white relative flex flex-col box-border px-12 py-12 text-left">
-            <div className="border-b border-indigo-600 pb-2 mb-8 flex justify-between items-end">
-              <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">fyo | Assessment Center</span>
-              <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">Evaluación por Competencias (2/2)</span>
+          {/* PAGE 3: ROLEPLAY - CONSECUENCIAS */}
+          <div className="pdf-page w-[210mm] h-[297mm] bg-white relative flex flex-col box-border px-[12mm] py-[12mm] text-left font-sans">
+            {/* Header */}
+            <div className="flex justify-between items-start mb-4">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-slate-900 rounded-xl flex items-center justify-center text-white font-black text-2xl tracking-tighter">
+                  fyo
+                </div>
+                <div className="flex flex-col">
+                  <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-none">GUÍA DEL EVALUADOR</h1>
+                  <h2 className="text-xs font-bold text-rose-600 tracking-widest uppercase mt-1">Assessment Center | Dinámica 2: Roleplay</h2>
+                </div>
+              </div>
+              <div className="flex flex-col items-end gap-1.5">
+                <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">Página 3 de 4</span>
+                <span className="bg-rose-100 text-rose-600 px-3 py-1 rounded text-[9px] font-black tracking-widest uppercase">Intervención</span>
+              </div>
             </div>
             
-            <div className="grid grid-cols-1 gap-5 mb-8">
-              <div className="border-b border-slate-100 pb-4">
-                <h4 className="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
-                  <span className="text-base">⚖️</span> Toma de decisiones
-                </h4>
-                <ul className="space-y-1 pl-6">
-                  <li className="text-slate-700 text-sm">• Define un curso de acción claro</li>
-                  <li className="text-slate-700 text-sm">• Plantea opciones y elige una</li>
-                  <li className="text-slate-700 text-sm">• Se hace cargo de la decisión</li>
-                </ul>
+            <div className="border-b-2 border-slate-900 w-full mb-6"></div>
+
+            {/* Section Title */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-rose-600 text-white p-1.5 rounded-md">
+                <UserX size={20} strokeWidth={2.5} />
               </div>
-              <div className="border-b border-slate-100 pb-4">
-                <h4 className="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
-                  <span className="text-base">🛡️</span> Manejo de presión
-                </h4>
-                <ul className="space-y-1 pl-6">
-                  <li className="text-slate-700 text-sm">• No entra en pánico ante el problema</li>
-                  <li className="text-slate-700 text-sm">• Sostiene foco en solución</li>
-                  <li className="text-slate-700 text-sm">• Ayuda a bajar la ansiedad del equipo</li>
-                </ul>
-              </div>
-              <div className="border-b border-slate-100 pb-4">
-                <h4 className="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
-                  <span className="text-base">👥</span> Orientación al cliente
-                </h4>
-                <ul className="space-y-1 pl-6">
-                  <li className="text-slate-700 text-sm">• Propone qué decirle al cliente</li>
-                  <li className="text-slate-700 text-sm">• Tiene en cuenta impacto reputacional</li>
-                  <li className="text-slate-700 text-sm">• Muestra empatía</li>
-                </ul>
-              </div>
-              <div className="border-b border-slate-100 pb-4">
-                <h4 className="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
-                  <span className="text-base">🔄</span> Adaptabilidad
-                </h4>
-                <ul className="space-y-1 pl-6">
-                  <li className="text-slate-700 text-sm">• Cambia rápido de enfoque</li>
-                  <li className="text-slate-700 text-sm">• Abandona ideas iniciales sin aferrarse</li>
-                  <li className="text-slate-700 text-sm">• Integra nueva información sin bloquearse</li>
-                </ul>
-              </div>
+              <h3 className="text-xl font-black text-rose-600 tracking-tight uppercase">El Cliente Descontento</h3>
             </div>
 
-            <div className="mt-auto pt-6 border-t border-slate-200">
-              <h3 className="text-base font-black text-slate-900 mb-1">
-                Preguntas Disparadoras
-              </h3>
-              <p className="text-xs text-slate-500 italic mb-4">(Usarlas si el equipo se estanca o para profundizar)</p>
-              
-              <div className="grid grid-cols-2 gap-6">
-                <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
-                  <h4 className="text-sm font-bold text-indigo-600 mb-3 flex items-center gap-2">
-                    <span className="text-base">🎤</span> Para Líderes
-                  </h4>
-                  <ul className="space-y-2">
-                    <li className="text-slate-700 text-xs">• ¿Cuál es el modelo de ingresos?</li>
-                    <li className="text-slate-700 text-xs">• ¿Experiencia premium o ahorro?</li>
-                    <li className="text-slate-700 text-xs">• ¿Qué los hace diferentes?</li>
-                    <li className="text-slate-700 text-xs">• ¿Dónde pierden plata?</li>
-                  </ul>
+            <div className="border border-rose-100 bg-rose-50/50 rounded-xl p-4 mb-6">
+              <p className="text-sm font-bold text-slate-800 leading-relaxed">
+                En la Fase 2 (Gestión de crisis), nosotros entramos en escena como los clientes descontentos. La complicación financiera dependerá de lo que ellos decidieron "ahorrar" en la Fase 1:
+              </p>
+            </div>
+
+            {/* Scenarios */}
+            <div className="flex flex-col gap-4 mb-auto">
+              {/* Low Cost */}
+              <div className="border border-slate-200 rounded-xl p-4 flex gap-4 items-start">
+                <div className="bg-rose-50 text-rose-600 p-2 rounded-lg mt-1">
+                  <DollarSign size={20} />
                 </div>
-                <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
-                  <h4 className="text-sm font-bold text-rose-600 mb-3 flex items-center gap-2">
-                    <span className="text-base">🚨</span> Gestión de Crisis
-                  </h4>
-                  <ul className="space-y-2">
-                    <li className="text-slate-700 text-xs">• ¿Reputación o rentabilidad?</li>
-                    <li className="text-slate-700 text-xs">• ¿Qué le dicen HOY al cliente?</li>
-                    <li className="text-slate-700 text-xs">• ¿A quién llaman primero?</li>
-                    <li className="text-slate-700 text-xs">• ¿Qué decisiones son reversibles?</li>
-                  </ul>
+                <div className="flex-1">
+                  <h5 className="text-sm font-black text-slate-900 uppercase mb-2">Si eligieron "Low-Cost" en Proveedores</h5>
+                  <div className="bg-slate-50 border-l-2 border-rose-500 p-3 mb-3">
+                    <p className="text-xs font-bold text-slate-800 italic">
+                      "Me acabo de enterar de que el hotel en la zona de guerra cerró y ustedes dicen que no me devuelven la plata. ¡Es un robo! Exijo mi dinero ahora."
+                    </p>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    <span className="font-bold text-rose-600">El desafío para el JP:</span> Deberán defender por qué arriesgaron el capital del cliente para ganar más margen de la agencia. Si devuelven el dinero, la agencia quiebra.
+                  </p>
                 </div>
+              </div>
+
+              {/* Soporte Basico */}
+              <div className="border border-slate-200 rounded-xl p-4 flex gap-4 items-start">
+                <div className="bg-rose-50 text-rose-600 p-2 rounded-lg mt-1">
+                  <Headphones size={20} />
+                </div>
+                <div className="flex-1">
+                  <h5 className="text-sm font-black text-slate-900 uppercase mb-2">Si eligieron "Soporte básico" en atención</h5>
+                  <div className="bg-slate-50 border-l-2 border-rose-500 p-3 mb-3">
+                    <p className="text-xs font-bold text-slate-800 italic">
+                      "Llevo 4 horas llamando porque mi tarjeta no pasa en Europa y nadie atiende. ¿Para qué les pagué una comisión de agencia si estoy solo en el aeropuerto?"
+                    </p>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    <span className="font-bold text-rose-600">El desafío para el JP:</span> Deberá calmar a un cliente que sabe que la empresa no invirtió en tecnología de soporte.
+                  </p>
+                </div>
+              </div>
+
+              {/* Sin Seguro */}
+              <div className="border border-slate-200 rounded-xl p-4 flex gap-4 items-start">
+                <div className="bg-rose-50 text-rose-600 p-2 rounded-lg mt-1">
+                  <ShieldAlert size={20} />
+                </div>
+                <div className="flex-1">
+                  <h5 className="text-sm font-black text-slate-900 uppercase mb-2">Si no contrataron el "Seguro de gran crisis"</h5>
+                  <div className="bg-slate-50 border-l-2 border-rose-500 p-3 mb-3">
+                    <p className="text-xs font-bold text-slate-800 italic">
+                      "Hay una amenaza de bomba y quiero volver a Argentina hoy. No tengo un peso más. Ustedes me trajeron, ustedes me sacan de aquí."
+                    </p>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    <span className="font-bold text-rose-600">El desafío para el JP:</span> Tendrán que decidir si usan el poco efectivo que les queda para rescatar a unos pocos clientes o si dejan que la reputación de la marca se hunda por no haber pagado el seguro caro.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* PAGE 4: ROLEPLAY - PERFILES */}
+          <div className="pdf-page w-[210mm] h-[297mm] bg-white relative flex flex-col box-border px-[12mm] py-[12mm] text-left font-sans">
+            {/* Header */}
+            <div className="flex justify-between items-start mb-4">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-slate-900 rounded-xl flex items-center justify-center text-white font-black text-2xl tracking-tighter">
+                  fyo
+                </div>
+                <div className="flex flex-col">
+                  <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-none">GUÍA DEL EVALUADOR</h1>
+                  <h2 className="text-xs font-bold text-rose-600 tracking-widest uppercase mt-1">Assessment Center | Dinámica 2: Roleplay</h2>
+                </div>
+              </div>
+              <div className="flex flex-col items-end gap-1.5">
+                <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">Página 4 de 4</span>
+                <span className="bg-rose-100 text-rose-600 px-3 py-1 rounded text-[9px] font-black tracking-widest uppercase">Intervención</span>
+              </div>
+            </div>
+            
+            <div className="border-b-2 border-slate-900 w-full mb-6"></div>
+
+            {/* Section Title */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-rose-600 text-white p-1.5 rounded-md">
+                <Target size={20} strokeWidth={2.5} />
+              </div>
+              <h3 className="text-xl font-black text-rose-600 tracking-tight uppercase">Debilidades del Presupuesto</h3>
+            </div>
+
+            <div className="border border-rose-100 bg-rose-50/50 rounded-xl p-4 mb-6">
+              <p className="text-sm font-bold text-slate-800 leading-relaxed">
+                Estas frases son para usarlas cuando detectamos una debilidad clara en su repartición de los $200.000:
+              </p>
+            </div>
+
+            {/* Scenarios */}
+            <div className="flex flex-col gap-4 mb-auto">
+              {/* Ahorrativo */}
+              <div className="border border-slate-200 rounded-xl p-4 flex gap-4 items-start">
+                <div className="bg-rose-50 text-rose-600 p-2 rounded-lg mt-1">
+                  <Wallet size={20} />
+                </div>
+                <div className="flex-1">
+                  <h5 className="text-sm font-black text-slate-900 uppercase mb-2">Si el equipo eligió un perfil "Ahorrativo" (Presupuesto Sobrante)</h5>
+                  <div className="bg-slate-50 border-l-2 border-rose-500 p-3 mb-3">
+                    <p className="text-xs font-bold text-slate-800 italic">
+                      "Veo que su agencia tiene mucho dinero guardado en el banco porque eligieron los servicios más baratos para nosotros. Ahora que hay una crisis, usen ese ahorro para pagarnos un vuelo privado. ¡Es de su propia rentabilidad de donde tiene que salir la solución!"
+                    </p>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    <span className="font-bold text-rose-600">Qué observar:</span> ¿El Director Comercial defiende el margen de la empresa o cede ante la presión del cliente para no quedar como "codicioso"?
+                  </p>
+                </div>
+              </div>
+
+              {/* Premium */}
+              <div className="border border-slate-200 rounded-xl p-4 flex gap-4 items-start">
+                <div className="bg-rose-50 text-rose-600 p-2 rounded-lg mt-1">
+                  <Diamond size={20} />
+                </div>
+                <div className="flex-1">
+                  <h5 className="text-sm font-black text-slate-900 uppercase mb-2">Si el equipo eligió un perfil "Premium" (Sin margen de maniobra)</h5>
+                  <div className="bg-slate-50 border-l-2 border-rose-500 p-3 mb-3">
+                    <p className="text-xs font-bold text-slate-800 italic">
+                      "Ustedes me prometieron que al pagar más estaba cubierto ante todo. Ahora me dicen que hay que esperar a que el seguro responda. ¡Yo les pagué a ustedes, no al seguro! Resuelvan esto con su propio capital si es necesario."
+                    </p>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    <span className="font-bold text-rose-600">Qué observar:</span> ¿Tienen lógica de negocio para explicar que los procesos tienen tiempos, o se desesperan al ver que su inversión "blindada" no es mágica?
+                  </p>
+                </div>
+              </div>
+
+              {/* Ignoró Comunicación */}
+              <div className="border border-slate-200 rounded-xl p-4 flex gap-4 items-start">
+                <div className="bg-rose-50 text-rose-600 p-2 rounded-lg mt-1">
+                  <Megaphone size={20} />
+                </div>
+                <div className="flex-1">
+                  <h5 className="text-sm font-black text-slate-900 uppercase mb-2">Si el equipo ignoró el área de Comunicación</h5>
+                  <div className="bg-slate-50 border-l-2 border-rose-500 p-3 mb-3">
+                    <p className="text-xs font-bold text-slate-800 italic">
+                      "Me entero de lo que pasa por Twitter antes que por ustedes. Si no tienen la capacidad de informar a sus 50 clientes en tiempo real, no deberían estar operando esta ruta. ¿En qué invirtieron el dinero?"
+                    </p>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    <span className="font-bold text-rose-600">Qué observar:</span> Cómo el equipo prioriza la información vs. la acción logística bajo presión.
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Notes Section */}
+            <div className="mt-4">
+              <div className="border-b border-dashed border-slate-300 mb-4"></div>
+              <div className="flex items-center gap-2 mb-3">
+                <ClipboardCheck size={16} className="text-slate-400" />
+                <h4 className="text-xs font-bold text-slate-400 tracking-widest uppercase">Anotaciones del Roleplay</h4>
+              </div>
+              <div className="flex flex-col gap-0">
+                <div className="border-b border-slate-100 h-7 w-full"></div>
+                <div className="border-b border-slate-100 h-7 w-full"></div>
+                <div className="border-b border-slate-100 h-7 w-full"></div>
               </div>
             </div>
           </div>
